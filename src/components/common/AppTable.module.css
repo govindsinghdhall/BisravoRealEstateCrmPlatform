@@ -1,0 +1,153 @@
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.search {
+  flex: 1;
+  min-width: 200px;
+}
+
+.filters {
+  margin-bottom: 16px;
+}
+
+.tableCard {
+  margin-top: 16px;
+  border-radius: 12px;
+  border: 1px solid #e8edf3;
+  overflow: hidden;
+  background: #fff;
+}
+
+.tableWrap {
+  width: 100%;
+  overflow: hidden;
+}
+
+.table {
+  width: 100%;
+  table-layout: fixed;
+}
+
+.table :global(.MuiTableCell-head) {
+  background: #f8fafc;
+  color: #64748b;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  padding: 14px 16px;
+  border-bottom: 1px solid #e8edf3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.table :global(.MuiTableCell-body) {
+  font-size: 0.875rem;
+  color: #0f172a;
+  padding: 14px 16px;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: middle;
+}
+
+.tableCard[data-density='tablet'] .table :global(.MuiTableCell-head),
+.tableCard[data-density='tablet'] .table :global(.MuiTableCell-body) {
+  padding: 12px 10px;
+  font-size: 0.8125rem;
+}
+
+.tableCard[data-density='mobile'] .table :global(.MuiTableCell-head),
+.tableCard[data-density='mobile'] .table :global(.MuiTableCell-body) {
+  padding: 10px 8px;
+  font-size: 0.75rem;
+}
+
+.table :global(.MuiTableRow-root:hover) {
+  background: #f8fafc;
+}
+
+.clickableRow {
+  cursor: pointer;
+}
+
+.cellFit {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 0;
+}
+
+.cellNoTruncate {
+  overflow: visible;
+  max-width: none;
+  white-space: nowrap;
+}
+
+.cellIndex {
+  color: #64748b;
+  font-weight: 600;
+  width: 40px;
+  max-width: 40px;
+  overflow: visible;
+}
+
+.cellPrimary {
+  color: #1565c0;
+  font-weight: 600;
+}
+
+.cellStrong {
+  font-weight: 600;
+}
+
+.cellMuted {
+  color: #64748b;
+}
+
+.cellTruncate {
+  /* ellipsis handled by cellFit */
+}
+
+.cellName {
+  min-width: 150px;
+  width: 18%;
+}
+
+.cellPhone {
+  min-width: 130px;
+  width: 14%;
+}
+
+.cellStatus {
+  min-width: 120px;
+  width: 12%;
+}
+
+.cellActions {
+  width: 88px;
+  max-width: 88px;
+  text-align: right;
+}
+
+.tableCard[data-density='mobile'] .cellActions {
+  width: 72px;
+  max-width: 72px;
+}
+
+.actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  justify-content: flex-end;
+}
+
+.empty {
+  padding: 48px 16px;
+  text-align: center;
+  color: #64748b;
+}
