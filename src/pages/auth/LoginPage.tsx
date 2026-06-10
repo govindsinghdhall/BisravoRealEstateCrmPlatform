@@ -18,6 +18,7 @@ export function LoginPage() {
   const navigate = useNavigate()
   const location = useLocation()
   const { setAuth, isAuthenticated } = useAuthStore()
+  const setOrganization = useOrganizationStore((state) => state.setOrganization)
   const [error, setError] = useState('')
 
   const from = (location.state as { from?: { pathname: string } })?.from?.pathname || '/dashboard'
