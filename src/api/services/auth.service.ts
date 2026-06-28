@@ -1,17 +1,24 @@
-import type { AuthResponse, LoginCredentials, RegisterCredentials, User } from '@/types'
+import type { AuthResponse, LoginCredentials, ProfileUpdateDto, RegisterCredentials, User } from '@/types'
 import type { ApiEnvelope, AuthPayload, BackendUser } from '../types/backend'
 import { apiClient } from '../client'
 import { ENDPOINTS } from '../endpoints'
 import { unwrap } from '../utils/response'
 import { mapUser } from '../utils/mappers'
-import { useAuthStore } from '@/store/authStore'
 
 function toAuthResponse(payload: AuthPayload): AuthResponse {
   return {
     user: mapUser(payload.user) as User,
     token: payload.accessToken,
-    refreshToken: payload.refreshToken,
   }
+}
+
+async function getMyBackendUser(): Promise<BackendUser> {
+  const { data } = await apiClient.get<ApiEnvelope<{ userId: string }>>(ENDPOINTS.AUTH.ME)
+  const me = unwrap(data)
+  const { data: userData } = await apiClient.get<ApiEnvelope<BackendUser>>(
+    ENDPOINTS.USERS.BY_ID(me.userId),
+  )
+  return unwrap(userData)
 }
 
 export const authService = {
@@ -32,18 +39,36 @@ export const authService = {
   },
 
   async logout(): Promise<void> {
-    const refreshToken = useAuthStore.getState().refreshToken
-    if (refreshToken) {
-      await apiClient.post(ENDPOINTS.AUTH.LOGOUT, { refreshToken })
+    try {
+      await apiClient.post(ENDPOINTS.AUTH.LOGOUT)
+    } catch {
+      // Client clears token regardless of server response
     }
   },
 
   async getMe(): Promise<User> {
-    const { data } = await apiClient.get<ApiEnvelope<{ userId: string }>>(ENDPOINTS.AUTH.ME)
-    const me = unwrap(data)
-    const { data: userData } = await apiClient.get<ApiEnvelope<BackendUser>>(
-      ENDPOINTS.USERS.BY_ID(me.userId),
+    const backendUser = await getMyBackendUser()
+    return mapUser(backendUser) as User
+  },
+
+  getMyBackendUser,
+
+  async updateProfile(dto: ProfileUpdateDto): Promise<User> {
+    const profile = await getMyBackendUser()
+    const payload: Record<string, unknown> = {
+      firstName: dto.firstName,
+      lastName: dto.lastName,
+      email: dto.email,
+      phone: dto.phone ?? null,
+      roleId: profile.roleId,
+      isActive: profile.isActive,
+    }
+    if (dto.password) payload.password = dto.password
+
+    const { data } = await apiClient.put<ApiEnvelope<BackendUser>>(
+      ENDPOINTS.USERS.BY_ID(profile.id),
+      payload,
     )
-    return mapUser(unwrap(userData)) as User
+    return mapUser(unwrap(data)) as User
   },
 }

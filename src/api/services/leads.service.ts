@@ -47,6 +47,23 @@ export const leadsService = {
     return { ...result, data: result.data.map(mapLead) }
   },
 
+  /** Fetch every lead page (100 per request) for exports. */
+  async fetchAll(params?: Omit<QueryParams, 'page' | 'pageSize'>): Promise<Lead[]> {
+    const pageSize = 100
+    let page = 1
+    let totalPages = 1
+    const leads: Lead[] = []
+
+    while (page <= totalPages) {
+      const result = await this.getAll({ ...params, page, pageSize })
+      leads.push(...result.data)
+      totalPages = result.totalPages
+      page += 1
+    }
+
+    return leads
+  },
+
   async getById(id: string): Promise<LeadDetail> {
     const { data } = await apiClient.get<ApiEnvelope<BackendLead>>(ENDPOINTS.LEADS.BY_ID(id))
     return mapLeadDetail(unwrap(data))

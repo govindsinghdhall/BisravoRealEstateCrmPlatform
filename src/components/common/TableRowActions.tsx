@@ -26,14 +26,14 @@ export function TableRowActions({ onView, onEdit, onDelete }: TableRowActionsPro
       )}
       {onEdit && (
         <Tooltip title="Edit">
-          <IconButton size="small" onClick={onEdit}>
+          <IconButton size="small" color="primary" onClick={onEdit} sx={{ flexShrink: 0 }}>
             <EditOutlinedIcon fontSize="small" />
           </IconButton>
         </Tooltip>
       )}
       {onDelete && (
         <Tooltip title="Delete">
-          <IconButton size="small" color="error" onClick={onDelete}>
+          <IconButton size="small" color="error" onClick={onDelete} sx={{ flexShrink: 0 }}>
             <DeleteOutlineIcon fontSize="small" />
           </IconButton>
         </Tooltip>

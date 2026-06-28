@@ -129,7 +129,16 @@ export function AppTable<T>({
         ) : (
           <>
             <TableContainer className={styles.tableWrap}>
-              <Table className={styles.table} size="medium">
+              <Table className={styles.table} size="medium" stickyHeader>
+                <colgroup>
+                  {showIndexColumn && <col className={styles.colIndex} />}
+                  {visibleColumns.map((col) => (
+                    <col
+                      key={col.id}
+                      className={col.id === 'actions' ? styles.colActions : undefined}
+                    />
+                  ))}
+                </colgroup>
                 <TableHead>
                   <TableRow>
                     {showIndexColumn && <TableCell className={styles.cellIndex}>#</TableCell>}
@@ -137,7 +146,12 @@ export function AppTable<T>({
                       <TableCell
                         key={col.id}
                         align={col.align ?? 'left'}
-                        className={col.id === 'actions' ? styles.cellActions : undefined}
+                        className={[
+                          col.id === 'actions' ? styles.cellActions : undefined,
+                          col.headerClassName,
+                        ]
+                          .filter(Boolean)
+                          .join(' ')}
                       >
                         {col.label}
                       </TableCell>
@@ -165,6 +179,7 @@ export function AppTable<T>({
                               col.noTruncate || col.id === 'actions'
                                 ? styles.cellNoTruncate
                                 : styles.cellFit,
+                              col.id === 'actions' ? styles.cellActions : undefined,
                               col.cellClassName,
                             ]
                               .filter(Boolean)

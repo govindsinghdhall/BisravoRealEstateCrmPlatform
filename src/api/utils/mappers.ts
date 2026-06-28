@@ -1,6 +1,9 @@
 import type {
   AgentPerformance,
   Booking,
+  Contact,
+  ContactDetail,
+  ContactLeadSummary,
   DashboardStats,
   Lead,
   LeadDetail,
@@ -16,6 +19,8 @@ import type {
 } from '@/types'
 import type {
   BackendBooking,
+  BackendContact,
+  BackendContactLead,
   BackendLead,
   BackendLeadNote,
   BackendLeadTimeline,
@@ -36,6 +41,7 @@ export function mapUser(user: BackendUser): UserRecord {
     email: user.email,
     firstName: user.firstName,
     lastName: user.lastName,
+    roleId: user.roleId,
     role: mapRoleName(user.role?.name) as UserRecord['role'],
     phone: user.phone ?? undefined,
     avatar: user.avatar ?? undefined,
@@ -71,6 +77,7 @@ export function mapLeadTimeline(entry: BackendLeadTimeline): LeadTimelineEntry {
 export function mapLead(lead: BackendLead): Lead {
   return {
     id: lead.id,
+    contactId: lead.contactId,
     firstName: lead.firstName,
     lastName: lead.lastName,
     email: lead.email ?? '',
@@ -107,6 +114,49 @@ export function mapLeadDetail(lead: BackendLead): LeadDetail {
     notesList: (lead.notes ?? []).map(mapLeadNote),
     timeline: (lead.timeline ?? []).map(mapLeadTimeline),
     counts: lead._count,
+  }
+}
+
+function mapContactLeadSummary(lead: BackendContactLead): ContactLeadSummary {
+  return {
+    id: lead.id,
+    status: lead.status as ContactLeadSummary['status'],
+    source: lead.source?.name,
+    propertyTitle: lead.property?.title,
+    assignedToName: lead.assignedTo
+      ? `${lead.assignedTo.firstName} ${lead.assignedTo.lastName}`
+      : undefined,
+    budget: toNumber(lead.budget),
+    propertyType: lead.requirements ?? undefined,
+    createdAt: lead.createdAt,
+    updatedAt: lead.updatedAt,
+  }
+}
+
+export function mapContact(contact: BackendContact): Contact {
+  return {
+    id: contact.id,
+    firstName: contact.firstName,
+    lastName: contact.lastName,
+    email: contact.email ?? undefined,
+    phone: contact.phone,
+    alternatePhone: contact.alternatePhone ?? undefined,
+    address: contact.address ?? undefined,
+    city: contact.city ?? undefined,
+    state: contact.state ?? undefined,
+    pincode: contact.pincode ?? undefined,
+    source: contact.source?.name,
+    sourceId: contact.sourceId ?? undefined,
+    leadsCount: contact._count?.leads,
+    createdAt: contact.createdAt,
+    updatedAt: contact.updatedAt,
+  }
+}
+
+export function mapContactDetail(contact: BackendContact): ContactDetail {
+  return {
+    ...mapContact(contact),
+    leads: (contact.leads ?? []).map(mapContactLeadSummary),
   }
 }
 

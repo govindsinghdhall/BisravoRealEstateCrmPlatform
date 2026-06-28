@@ -6,11 +6,11 @@ import { STORAGE_KEYS } from '@/utils/constants'
 interface AuthState {
   user: User | null
   accessToken: string | null
-  refreshToken: string | null
   isAuthenticated: boolean
   hasHydrated: boolean
-  setAuth: (user: User, accessToken: string, refreshToken: string) => void
-  setTokens: (accessToken: string, refreshToken: string) => void
+  setAuth: (user: User, accessToken: string) => void
+  setUser: (user: User) => void
+  setAccessToken: (accessToken: string) => void
   setHasHydrated: (value: boolean) => void
   logout: () => void
 }
@@ -20,19 +20,16 @@ export const useAuthStore = create<AuthState>()(
     (set) => ({
       user: null,
       accessToken: null,
-      refreshToken: null,
       isAuthenticated: false,
       hasHydrated: false,
-      setAuth: (user, accessToken, refreshToken) =>
-        set({ user, accessToken, refreshToken, isAuthenticated: true }),
-      setTokens: (accessToken, refreshToken) =>
-        set({ accessToken, refreshToken, isAuthenticated: true }),
+      setAuth: (user, accessToken) => set({ user, accessToken, isAuthenticated: true }),
+      setUser: (user) => set({ user }),
+      setAccessToken: (accessToken) => set({ accessToken, isAuthenticated: true }),
       setHasHydrated: (value) => set({ hasHydrated: value }),
       logout: () =>
         set({
           user: null,
           accessToken: null,
-          refreshToken: null,
           isAuthenticated: false,
         }),
     }),

@@ -7,6 +7,7 @@ export interface UserRecord {
   email: string
   firstName: string
   lastName: string
+  roleId: string
   role: UserRole
   phone?: string
   avatar?: string

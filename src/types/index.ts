@@ -1,5 +1,6 @@
 export type * from './common'
-export type { User, LoginCredentials, RegisterCredentials, AuthResponse } from './auth'
+export type { User, LoginCredentials, RegisterCredentials, AuthResponse, ProfileUpdateDto } from './auth'
+export type * from './contact'
 export type * from './lead'
 export type * from './property'
 export type * from './siteVisit'

@@ -1,4 +1,5 @@
 export { authService } from './auth.service'
+export { contactsService } from './contacts.service'
 export { dashboardService } from './dashboard.service'
 export { leadsService } from './leads.service'
 export { propertiesService } from './properties.service'

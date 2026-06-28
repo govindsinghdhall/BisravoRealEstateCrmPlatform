@@ -1,0 +1,213 @@
+CONTACTS MODULE — CURRENT FUNCTIONALITY
+========================================
+RealEstate CRM Frontend (as of current implementation)
+Last updated: March 2026
+
+
+OVERVIEW
+--------
+Contacts are centralized person records in the CRM. One Contact can be linked
+to many Leads over time (e.g. the same person inquiring about different
+properties on different dates).
+
+Leads still work the same way on the Leads page (create/edit form unchanged).
+When a lead is created, the backend links it to a Contact (by phone deduplication
+per organization). The frontend reads contactId on leads but does not send it
+when creating or updating leads.
+
+
+NAVIGATION
+----------
+- Sidebar: "Contacts" menu item (between Leads and Properties)
+- Routes:
+    /contacts           → Contacts list page
+    /contacts/:id       → Contact detail page (id is a number, e.g. /contacts/1)
+- From Lead Detail: "View Contact" button and contact ID chip when lead.contactId exists
+
+
+CONTACTS LIST PAGE (/contacts)
+------------------------------
+File: src/pages/contacts/ContactsPage.tsx
+
+Purpose:
+  Browse all contacts in the organization with search and summary stats.
+
+What you can do:
+  - Search contacts by name, email, phone, or city (table search bar)
+  - Click any row to open the contact detail page
+  - Click Contact ID chip to open detail
+  - Click View (eye) icon in Actions column to open detail
+  - Retry loading if the API fails (error alert with Retry button)
+
+Summary cards (top of page):
+  - Total Contacts      — count of unique people in CRM
+  - With Email          — contacts that have an email address
+  - Active Contacts     — contacts with at least one linked lead
+  - Linked Leads        — sum of lead counts in the current table view
+
+Table columns:
+  - Contact ID          — formatted as CT-000001, CT-000002, etc.
+  - Name                — first + last name
+  - Phone
+  - Email               — hidden on mobile
+  - City                — hidden on tablet/mobile
+  - Source              — lead source name; hidden on tablet/mobile
+  - Leads               — number of leads linked to this contact
+  - Last Updated        — date/time; hidden on tablet/mobile
+  - Actions             — View only (no Edit or Delete on this page)
+
+Pagination:
+  - Loads up to 50 contacts per request (pageSize: 50)
+  - AppTable handles client-side pagination within loaded rows
+
+Empty states:
+  - No contacts: "No contacts yet — they are created automatically when leads are added"
+  - Search with no match: "No contacts match your search"
+
+What is NOT on the list page:
+  - No "Add Contact" button
+  - No Edit or Delete actions in the UI
+  - No export/download
+
+
+CONTACT DETAIL PAGE (/contacts/:id)
+-----------------------------------
+File: src/pages/contacts/ContactDetailPage.tsx
+
+Purpose:
+  View one person's profile and full inquiry (lead) history.
+
+Header:
+  - Contact full name
+  - "Contact since" date
+  - Breadcrumbs: Home → Contacts → [Name]
+  - "Back to Contacts" button
+
+Top info bar:
+  - Contact record ID chip (CT-000001 style)
+  - Phone-based ID chip (CT-XXXXXXXX from phone digits)
+  - Chip showing total linked leads count
+
+Left panel — Contact Details:
+  - Email
+  - Phone
+  - Alternate phone (if present)
+  - Location (address, city, state, pincode combined)
+  - Source
+  - Last updated date/time
+
+Right panel — Lead History table:
+  Shows all leads linked to this contact (up to 20 most recent from API).
+  Columns:
+    - Lead ID (clickable → opens /leads/:id)
+    - Status (badge)
+    - Property Interest
+    - Source
+    - Assigned Agent
+    - Budget
+    - Inquiry Date (created date)
+
+  - Click any lead row to open that lead's detail page
+  - Empty: "No leads linked to this contact yet."
+
+What is NOT on the detail page:
+  - No edit contact form
+  - No delete contact button
+  - No add lead from contact page
+  - No notes or timeline on the contact itself (only on individual leads)
+
+
+LEAD DETAIL INTEGRATION
+-----------------------
+File: src/pages/leads/LeadDetailPage.tsx
+
+When a lead has contactId (number):
+  - "View Contact" button appears in the Contact Details section
+  - Contact Record chip (CT-00000X) is shown and clickable
+  - Both navigate to /contacts/{contactId}
+
+When contactId is missing:
+  - No contact link is shown (older leads or edge cases)
+
+
+API LAYER (frontend)
+--------------------
+File: src/api/services/contacts.service.ts
+Endpoints: GET/POST /contacts, GET/PUT/DELETE /contacts/:id
+
+Implemented service methods:
+  - getAll(params)     — paginated list with optional search
+  - getById(id)        — detail with recent leads array
+  - create(dto)        — available in code, NOT used by UI yet
+  - update(id, dto)    — available in code, NOT used by UI yet
+  - delete(id)         — available in code, NOT used by UI yet
+
+Backend permissions (JWT required):
+  - GET contacts      — leads.read
+  - POST contacts     — leads.create
+  - PUT contacts      — leads.update
+  - DELETE contacts   — leads.delete
+
+
+DATA MODEL
+----------
+File: src/types/contact.ts
+
+Contact ID type: number (not UUID — unlike leads and properties)
+
+Contact fields:
+  id, firstName, lastName, email, phone, alternatePhone,
+  address, city, state, pincode, source, sourceId,
+  leadsCount, createdAt, updatedAt
+
+ContactDetail adds:
+  leads[] — array of ContactLeadSummary (id, status, source, propertyTitle,
+            assignedToName, budget, propertyType, createdAt, updatedAt)
+
+Lead type addition:
+  contactId?: number — optional on each lead
+
+
+HOW CONTACTS GET CREATED (current flow)
+---------------------------------------
+The Contacts UI does not create contacts directly.
+
+Contacts are created automatically by the backend when:
+  - A new lead is added (Leads page or website form)
+  - Backend deduplicates by phone number per organization
+  - If phone exists → existing contact is reused/updated
+  - If phone is new → new contact is created and linked to the lead
+
+
+RELATIONSHIP: CONTACT vs LEAD
+-----------------------------
+Contact  = the person (name, phone, email, address — stable identity)
+Lead     = one inquiry/sales opportunity (status, budget, property interest, notes)
+
+Example:
+  John Doe (Contact CT-000001)
+    ├── Lead LD-ABC123 — Villa inquiry, status NEW
+    ├── Lead LD-DEF456 — Apartment inquiry, status CONTACTED
+    └── Lead LD-GHI789 — Plot inquiry, status WON
+
+
+KNOWN LIMITATIONS (current implementation)
+------------------------------------------
+1. Read-only UI — no create/edit/delete contact forms on Contacts pages
+2. List page loads 50 contacts max per API call (no "load all" or infinite scroll)
+3. Detail page shows up to 20 recent leads per contact (backend limit)
+4. Summary stats on list page are calculated from loaded rows, not full database
+5. contactId only appears on leads after backend contact linking is active
+6. CRUD API methods exist in contacts.service.ts but are unused in the UI
+
+
+FILES REFERENCE
+---------------
+src/pages/contacts/ContactsPage.tsx       — list page
+src/pages/contacts/ContactDetailPage.tsx  — detail page
+src/api/services/contacts.service.ts      — API calls
+src/types/contact.ts                      — TypeScript types
+src/api/utils/mappers.ts                  — mapContact, mapContactDetail
+src/routes/index.tsx                      — /contacts routes
+src/components/layout/Sidebar.tsx         — nav item
+src/utils/formatters.ts                   — formatContactRecordId()

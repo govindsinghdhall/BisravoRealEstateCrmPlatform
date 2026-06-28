@@ -38,12 +38,6 @@ export interface BackendUser {
 export interface AuthPayload {
   user: BackendUser
   accessToken: string
-  refreshToken: string
-}
-
-export interface TokenPayload {
-  accessToken: string
-  refreshToken: string
 }
 
 export interface BackendLeadSource {
@@ -71,6 +65,7 @@ export interface BackendLeadTimeline {
 
 export interface BackendLead {
   id: string
+  contactId?: number
   firstName: string
   lastName: string
   email?: string | null
@@ -94,6 +89,37 @@ export interface BackendLead {
   notes?: BackendLeadNote[]
   timeline?: BackendLeadTimeline[]
   _count?: { notes: number; siteVisits: number; bookings: number }
+  createdAt: string
+  updatedAt: string
+}
+
+export interface BackendContactLead {
+  id: string
+  status: string
+  budget?: string | number | null
+  requirements?: string | null
+  source?: BackendLeadSource
+  property?: { id: string; title: string }
+  assignedTo?: { id: string; firstName: string; lastName: string }
+  createdAt: string
+  updatedAt: string
+}
+
+export interface BackendContact {
+  id: number
+  firstName: string
+  lastName: string
+  email?: string | null
+  phone: string
+  alternatePhone?: string | null
+  address?: string | null
+  city?: string | null
+  state?: string | null
+  pincode?: string | null
+  sourceId?: string | null
+  source?: BackendLeadSource
+  _count?: { leads: number }
+  leads?: BackendContactLead[]
   createdAt: string
   updatedAt: string
 }

@@ -31,5 +31,12 @@ export interface RegisterCredentials {
 export interface AuthResponse {
   user: User
   token: string
-  refreshToken: string
+}
+
+export interface ProfileUpdateDto {
+  firstName: string
+  lastName: string
+  email: string
+  phone?: string
+  password?: string
 }

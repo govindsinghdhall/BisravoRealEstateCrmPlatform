@@ -1,5 +1,7 @@
-import { useMemo, useState } from 'react'
-import { Box, Button } from '@mui/material'
+import { useCallback, useMemo, useState } from 'react'
+import { Alert, Box, Button, IconButton } from '@mui/material'
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import Grid from '@mui/material/Grid2'
 import AddIcon from '@mui/icons-material/Add'
 import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined'
@@ -17,10 +19,11 @@ import { PageSummaryGrid, PageSummaryItem } from '@/components/common/PageSummar
 import { SideDrawer } from '@/components/common/SideDrawer'
 import { StatCard } from '@/components/common/StatCard'
 import { StatusBadge } from '@/components/common/StatusBadge'
-import { TableRowActions } from '@/components/common/TableRowActions'
 import { FormTextField } from '@/components/forms/FormTextField'
 import { FormSelect } from '@/components/forms/FormSelect'
 import { FormSwitch } from '@/components/forms/FormSwitch'
+import { getErrorMessage } from '@/api/client'
+import { normalizeRoleKey, rolesMatch } from '@/api/utils/enums'
 import { userSchema, type UserFormData } from '@/schemas/user.schema'
 import { rolesService, usersService } from '@/api/services'
 import {
@@ -29,7 +32,12 @@ import {
   removeFromListCaches,
   updateInListCaches,
 } from '@/api/utils/query'
+import { useAuthStore } from '@/store/authStore'
 import type { UserRecord } from '@/types'
+
+function mapRoleFromName(name: string): UserRecord['role'] {
+  return normalizeRoleKey(name) as UserRecord['role']
+}
 
 const defaultValues: UserFormData = {
   email: '',
@@ -42,6 +50,7 @@ const defaultValues: UserFormData = {
 }
 
 export function UsersPage() {
+  const isAdmin = useAuthStore((state) => state.user?.role === 'admin')
   const queryClient = useQueryClient()
   const [search, setSearch] = useState('')
   const [drawerOpen, setDrawerOpen] = useState(false)
@@ -53,7 +62,11 @@ export function UsersPage() {
     queryFn: () => usersService.getAll({ search, pageSize: 50 }),
   })
 
-  const { data: roles = [] } = useQuery({
+  const {
+    data: roles = [],
+    isError: rolesError,
+    error: rolesQueryError,
+  } = useQuery({
     queryKey: ['roles'],
     queryFn: rolesService.getAll,
   })
@@ -63,13 +76,17 @@ export function UsersPage() {
     defaultValues,
   })
 
+  const [formError, setFormError] = useState('')
+
   const createMutation = useMutation({
     mutationFn: usersService.create,
     onSuccess: async (user) => {
       prependToListCaches(queryClient, ['users'], user)
       await invalidateListQueries(queryClient, ['users'])
+      setFormError('')
       handleCloseDrawer()
     },
+    onError: (err) => setFormError(getErrorMessage(err)),
   })
 
   const updateMutation = useMutation({
@@ -78,8 +95,10 @@ export function UsersPage() {
     onSuccess: async (user) => {
       updateInListCaches(queryClient, ['users'], user)
       await invalidateListQueries(queryClient, ['users'])
+      setFormError('')
       handleCloseDrawer()
     },
+    onError: (err) => setFormError(getErrorMessage(err)),
   })
 
   const deleteMutation = useMutation({
@@ -91,43 +110,67 @@ export function UsersPage() {
     },
   })
 
-  const handleOpenCreate = () => {
+  const resolveRoleId = useCallback(
+    (user: UserRecord) => {
+      if (user.roleId && roles.some((role) => role.id === user.roleId)) {
+        return user.roleId
+      }
+      return roles.find((role) => rolesMatch(role.name, user.role))?.id ?? ''
+    },
+    [roles],
+  )
+
+  const handleOpenCreate = useCallback(() => {
+    if (!isAdmin) return
+    setFormError('')
     setEditingUser(null)
     reset(defaultValues)
     setDrawerOpen(true)
-  }
+  }, [isAdmin, reset])
 
-  const handleOpenEdit = (user: UserRecord) => {
-    setEditingUser(user)
-    const matchedRole = roles.find((r) => r.name.toLowerCase() === user.role)
-    reset({
-      email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      roleId: matchedRole?.id ?? '',
-      phone: user.phone,
-      password: '',
-      isActive: user.isActive,
-    })
-    setDrawerOpen(true)
-  }
+  const handleOpenEdit = useCallback(
+    (user: UserRecord) => {
+      setFormError('')
+      setEditingUser(user)
+      reset({
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        roleId: resolveRoleId(user),
+        phone: user.phone ?? '',
+        password: '',
+        isActive: user.isActive,
+      })
+      setDrawerOpen(true)
+    },
+    [reset, resolveRoleId],
+  )
 
-  const handleCloseDrawer = () => {
+  const handleCloseDrawer = useCallback(() => {
     setDrawerOpen(false)
     setEditingUser(null)
+    setFormError('')
     reset(defaultValues)
-  }
+  }, [reset])
 
   const onSubmit = (formData: UserFormData) => {
+    setFormError('')
     const matchedRole = roles.find((r) => r.id === formData.roleId)
+    if (!matchedRole) {
+      setFormError('Please select a valid role.')
+      return
+    }
+
     const payload = {
       ...formData,
-      role: (matchedRole?.name.toLowerCase() ?? 'agent') as UserRecord['role'],
+      role: mapRoleFromName(matchedRole.name),
     }
     if (editingUser) {
       updateMutation.mutate({ id: editingUser.id, data: payload })
-    } else {
+    } else if (isAdmin) {
       createMutation.mutate(payload as UserFormData & { password: string; role: UserRecord['role'] })
+    } else {
+      setFormError('Only administrators can add users.')
     }
   }
 
@@ -178,16 +221,41 @@ export function UsersPage() {
         id: 'actions',
         label: 'Actions',
         align: 'right',
+        noTruncate: true,
         cellClassName: tableStyles.cellActions,
         render: (user) => (
-          <TableRowActions
-            onEdit={() => handleOpenEdit(user)}
-            onDelete={() => setDeleteId(user.id)}
-          />
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'flex-end',
+              gap: 0.5,
+              flexShrink: 0,
+            }}
+            onClick={(event) => event.stopPropagation()}
+          >
+            <Button
+              size="small"
+              variant="outlined"
+              color="primary"
+              startIcon={<EditOutlinedIcon />}
+              onClick={() => handleOpenEdit(user)}
+            >
+              Edit
+            </Button>
+            <IconButton
+              size="small"
+              color="error"
+              aria-label="Delete user"
+              onClick={() => setDeleteId(user.id)}
+            >
+              <DeleteOutlineIcon fontSize="small" />
+            </IconButton>
+          </Box>
         ),
       },
     ],
-    [],
+    [handleOpenEdit],
   )
 
   return (
@@ -197,11 +265,19 @@ export function UsersPage() {
         subtitle="Manage team members and access"
         breadcrumbs={[{ label: 'Home', href: '/dashboard' }, { label: 'Users' }]}
         action={
-          <Button variant="contained" startIcon={<AddIcon />} onClick={handleOpenCreate}>
-            Add User
-          </Button>
+          isAdmin ? (
+            <Button variant="contained" startIcon={<AddIcon />} onClick={handleOpenCreate}>
+              Add User
+            </Button>
+          ) : undefined
         }
       />
+
+      {rolesError && (
+        <Alert severity="warning" sx={{ mb: 2 }}>
+          Unable to load roles: {getErrorMessage(rolesQueryError)}. Role assignment may be unavailable.
+        </Alert>
+      )}
 
       <PageSummaryGrid>
         <PageSummaryItem>
@@ -227,6 +303,7 @@ export function UsersPage() {
         searchValue={search}
         onSearchChange={setSearch}
         searchPlaceholder="Search users..."
+        onRowClick={handleOpenEdit}
       />
 
       <SideDrawer
@@ -251,6 +328,12 @@ export function UsersPage() {
         }
       >
         <Box component="form" onSubmit={handleSubmit(onSubmit)}>
+          {formError && (
+            <Alert severity="error" sx={{ mb: 2 }} onClose={() => setFormError('')}>
+              {formError}
+            </Alert>
+          )}
+
           <Grid container spacing={2}>
             <Grid size={{ xs: 12, sm: 6 }}>
               <FormTextField name="firstName" control={control} label="First Name" required />
@@ -270,6 +353,8 @@ export function UsersPage() {
                 control={control}
                 label="Role"
                 options={roles.map((r) => ({ value: r.id, label: r.name }))}
+                placeholder={roles.length ? 'Select role' : 'No roles available'}
+                disabled={roles.length === 0}
                 required
               />
             </Grid>

@@ -25,7 +25,7 @@
 
 .tableWrap {
   width: 100%;
-  overflow: hidden;
+  overflow-x: auto;
 }
 
 .table {
@@ -128,22 +128,50 @@
   width: 12%;
 }
 
-.cellActions {
-  width: 88px;
-  max-width: 88px;
-  text-align: right;
+.colIndex {
+  width: 40px;
 }
 
+.colActions {
+  width: 160px;
+}
+
+.cellActions {
+  width: 160px;
+  min-width: 160px;
+  max-width: 160px;
+  text-align: right;
+  overflow: visible;
+  position: sticky;
+  right: 0;
+  z-index: 1;
+  background: #fff;
+  box-shadow: -6px 0 10px -8px rgba(15, 23, 42, 0.28);
+}
+
+.table :global(.MuiTableHead-root) .cellActions {
+  z-index: 2;
+  background: #f8fafc;
+}
+
+.table :global(.MuiTableRow-root:hover) .cellActions {
+  background: #f8fafc;
+}
+
+.tableCard[data-density='mobile'] .colActions,
 .tableCard[data-density='mobile'] .cellActions {
-  width: 72px;
-  max-width: 72px;
+  width: 132px;
+  min-width: 132px;
+  max-width: 132px;
 }
 
 .actions {
   display: inline-flex;
   align-items: center;
-  gap: 2px;
+  gap: 4px;
   justify-content: flex-end;
+  flex-shrink: 0;
+  width: 100%;
 }
 
 .empty {

@@ -19,6 +19,7 @@ import { SideDrawer } from '@/components/common/SideDrawer'
 import { StatCard } from '@/components/common/StatCard'
 import { StatusBadge } from '@/components/common/StatusBadge'
 import { TableRowActions } from '@/components/common/TableRowActions'
+import { DownloadLeadsButton } from '@/components/leads/DownloadLeadsButton'
 import { LeadFormFields } from '@/components/leads/LeadFormFields'
 import { leadSchema, type LeadFormData } from '@/schemas/lead.schema'
 import { getErrorMessage } from '@/api/client'
@@ -250,9 +251,12 @@ export function LeadsPage() {
         subtitle="Track inquiries, follow up on new leads, and manage your sales pipeline"
         breadcrumbs={[{ label: 'Home', href: '/dashboard' }, { label: 'Leads' }]}
         action={
-          <Button variant="contained" startIcon={<AddIcon />} onClick={handleOpenCreate}>
-            Add Lead
-          </Button>
+          <Box display="flex" flexWrap="wrap" gap={1} justifyContent="flex-end">
+            <DownloadLeadsButton searchFilter={search} disabled={isLoading || isError} />
+            <Button variant="contained" startIcon={<AddIcon />} onClick={handleOpenCreate}>
+              Add Lead
+            </Button>
+          </Box>
         }
       />
 

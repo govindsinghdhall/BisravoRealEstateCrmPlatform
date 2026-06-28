@@ -38,7 +38,7 @@ export function SignupPage() {
       return authService.register(credentials)
     },
     onSuccess: (data) => {
-      setAuth(data.user, data.token, data.refreshToken)
+      setAuth(data.user, data.token)
       navigate('/dashboard', { replace: true })
     },
     onError: (err) => setError(getErrorMessage(err)),

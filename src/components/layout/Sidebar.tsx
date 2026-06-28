@@ -11,6 +11,7 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material'
+import ContactsOutlinedIcon from '@mui/icons-material/ContactsOutlined'
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined'
 import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline'
 import HomeWorkOutlinedIcon from '@mui/icons-material/HomeWorkOutlined'
@@ -29,6 +30,7 @@ import { SIDEBAR_COLLAPSED_WIDTH, SIDEBAR_WIDTH } from '@/utils/constants'
 const NAV_ITEMS = [
   { label: 'Dashboard', path: '/dashboard', icon: DashboardOutlinedIcon },
   { label: 'Leads', path: '/leads', icon: PeopleOutlineIcon },
+  { label: 'Contacts', path: '/contacts', icon: ContactsOutlinedIcon },
   { label: 'Properties', path: '/properties', icon: HomeWorkOutlinedIcon },
   { label: 'Site Visits', path: '/site-visits', icon: EventAvailableOutlinedIcon },
   { label: 'Bookings', path: '/bookings', icon: BookOnlineOutlinedIcon },

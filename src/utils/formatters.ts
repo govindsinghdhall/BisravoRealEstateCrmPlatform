@@ -32,6 +32,10 @@ export function formatLeadId(id: string): string {
   return `LD-${id.replace(/-/g, '').slice(0, 8).toUpperCase()}`
 }
 
+export function formatContactRecordId(id: number): string {
+  return `CT-${String(id).padStart(6, '0')}`
+}
+
 export function formatContactId(phone: string): string {
   const digits = phone.replace(/\D/g, '')
   return `CT-${digits.slice(-8).padStart(8, '0')}`

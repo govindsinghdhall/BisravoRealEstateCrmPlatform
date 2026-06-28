@@ -3,7 +3,6 @@ export const ENDPOINTS = {
     LOGIN: '/auth/login',
     REGISTER: '/auth/register',
     LOGOUT: '/auth/logout',
-    REFRESH: '/auth/refresh',
     ME: '/auth/me',
   },
   LEADS: {
@@ -11,6 +10,12 @@ export const ENDPOINTS = {
     BY_ID: (id: string) => `/leads/${id}`,
     TIMELINE: (id: string) => `/leads/${id}/timeline`,
     NOTES: (id: string) => `/leads/${id}/notes`,
+  },
+  CONTACTS: {
+    BASE: '/contacts',
+    BY_ID: (id: number | string) => `/contacts/${id}`,
+    IMPORT_PREVIEW: '/contacts/import/preview',
+    IMPORT: '/contacts/import',
   },
   PROPERTIES: {
     BASE: '/properties',

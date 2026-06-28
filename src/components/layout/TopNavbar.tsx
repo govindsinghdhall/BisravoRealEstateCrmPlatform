@@ -5,10 +5,8 @@ import {
   Badge,
   Box,
   IconButton,
-  InputAdornment,
   Menu,
   MenuItem,
-  TextField,
   Toolbar,
   Tooltip,
   Typography,
@@ -16,7 +14,6 @@ import {
   useTheme,
 } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu'
-import SearchIcon from '@mui/icons-material/Search'
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined'
 import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined'
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined'
@@ -71,25 +68,6 @@ export function TopNavbar() {
 
         <OrgBrand />
 
-        <TextField
-          size="small"
-          placeholder="Search..."
-          sx={{
-            width: { xs: 0, sm: 220, md: 280 },
-            display: { xs: 'none', sm: 'block' },
-            ml: { sm: 1 },
-          }}
-          slotProps={{
-            input: {
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon fontSize="small" color="action" />
-                </InputAdornment>
-              ),
-            },
-          }}
-        />
-
         <Box flex={1} />
 
         <Tooltip title={mode === 'light' ? 'Dark mode' : 'Light mode'}>
@@ -141,7 +119,12 @@ export function TopNavbar() {
           transformOrigin={{ horizontal: 'right', vertical: 'top' }}
           anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
         >
-          <MenuItem onClick={() => setAnchorEl(null)}>
+          <MenuItem
+            onClick={() => {
+              setAnchorEl(null)
+              navigate('/profile')
+            }}
+          >
             <PersonOutlineIcon fontSize="small" sx={{ mr: 1 }} />
             Profile
           </MenuItem>

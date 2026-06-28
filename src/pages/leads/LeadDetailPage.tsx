@@ -15,6 +15,7 @@ import {
 } from '@mui/material'
 import Grid from '@mui/material/Grid2'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
+import ContactPageOutlinedIcon from '@mui/icons-material/ContactPageOutlined'
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined'
 import PhoneOutlinedIcon from '@mui/icons-material/PhoneOutlined'
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined'
@@ -31,7 +32,7 @@ import { getErrorMessage } from '@/api/client'
 import { leadsService } from '@/api/services'
 import { invalidateListQueries } from '@/api/utils/query'
 import { LEAD_STATUSES } from '@/utils/constants'
-import { capitalize, formatContactId, formatCurrency, formatDateTime, formatLeadId } from '@/utils/formatters'
+import { capitalize, formatContactId, formatContactRecordId, formatCurrency, formatDateTime, formatLeadId } from '@/utils/formatters'
 import type { LeadStatus } from '@/types'
 
 const TIMELINE_ACTION_LABELS: Record<string, string> = {
@@ -167,8 +168,37 @@ export function LeadDetailPage() {
 
       <Grid container spacing={3}>
         <Grid size={{ xs: 12, md: 4 }}>
-          <SectionCard title="Contact Details" subtitle="Primary contact information">
+          <SectionCard
+            title="Contact Details"
+            subtitle="Primary contact information"
+            action={
+              lead.contactId ? (
+                <Button
+                  size="small"
+                  variant="outlined"
+                  startIcon={<ContactPageOutlinedIcon />}
+                  onClick={() => navigate(`/contacts/${lead.contactId}`)}
+                >
+                  View Contact
+                </Button>
+              ) : undefined
+            }
+          >
             <Stack spacing={2.5}>
+              {lead.contactId && (
+                <Box>
+                  <Typography variant="caption" color="text.secondary">
+                    Contact Record
+                  </Typography>
+                  <Box mt={0.5}>
+                    <IdChip
+                      label={formatContactRecordId(lead.contactId)}
+                      variant="contact"
+                      onClick={() => navigate(`/contacts/${lead.contactId}`)}
+                    />
+                  </Box>
+                </Box>
+              )}
               <InfoRow icon={<EmailOutlinedIcon fontSize="small" />} label="Email" value={lead.email} />
               <InfoRow icon={<PhoneOutlinedIcon fontSize="small" />} label="Phone" value={lead.phone} />
               {lead.alternatePhone && (

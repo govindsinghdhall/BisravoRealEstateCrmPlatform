@@ -31,7 +31,7 @@ export function LoginPage() {
   const loginMutation = useMutation({
     mutationFn: authService.login,
     onSuccess: async (data) => {
-      setAuth(data.user, data.token, data.refreshToken)
+      setAuth(data.user, data.token)
       try {
         const organization = await organizationService.getCurrent()
         setOrganization(organization)
@@ -62,7 +62,14 @@ export function LoginPage() {
       <Box component="form" onSubmit={handleSubmit((data) => loginMutation.mutate(data))}>
         <Box display="flex" flexDirection="column" gap={2.5}>
           <FormTextField name="email" control={control} label="Email" type="email" required />
-          <FormTextField name="password" control={control} label="Password" type="password" required />
+          <FormTextField
+            name="password"
+            control={control}
+            label="Password"
+            type="password"
+            showPasswordToggle
+            required
+          />
           <Button
             type="submit"
             variant="contained"

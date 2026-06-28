@@ -1,10 +1,9 @@
 import { z } from 'zod'
 
-export const userSchema = z.object({
-  email: z.string().email('Enter a valid email'),
+export const profileSchema = z.object({
   firstName: z.string().min(1, 'First name is required'),
   lastName: z.string().min(1, 'Last name is required'),
-  roleId: z.string().min(1, 'Role is required'),
+  email: z.string().email('Enter a valid email'),
   phone: z.string().optional(),
   password: z
     .string()
@@ -12,7 +11,6 @@ export const userSchema = z.object({
     .refine((value) => !value || value.length >= 6, {
       message: 'Password must be at least 6 characters',
     }),
-  isActive: z.boolean(),
 })
 
-export type UserFormData = z.infer<typeof userSchema>
+export type ProfileFormData = z.infer<typeof profileSchema>
