@@ -64,18 +64,18 @@ export const leadsService = {
     return leads
   },
 
-  async getById(id: string): Promise<LeadDetail> {
-    const { data } = await apiClient.get<ApiEnvelope<BackendLead>>(ENDPOINTS.LEADS.BY_ID(id))
+  async getById(id: string | number): Promise<LeadDetail> {
+    const { data } = await apiClient.get<ApiEnvelope<BackendLead>>(ENDPOINTS.LEADS.BY_ID(String(id)))
     return mapLeadDetail(unwrap(data))
   },
 
-  async getTimeline(id: string): Promise<LeadTimelineEntry[]> {
-    const { data } = await apiClient.get<ApiEnvelope<BackendLeadTimeline[]>>(ENDPOINTS.LEADS.TIMELINE(id))
+  async getTimeline(id: string | number): Promise<LeadTimelineEntry[]> {
+    const { data } = await apiClient.get<ApiEnvelope<BackendLeadTimeline[]>>(ENDPOINTS.LEADS.TIMELINE(String(id)))
     return (unwrap(data) ?? []).map(mapLeadTimeline)
   },
 
-  async addNote(id: string, content: string): Promise<void> {
-    await apiClient.post(ENDPOINTS.LEADS.NOTES(id), { content })
+  async addNote(id: string | number, content: string): Promise<void> {
+    await apiClient.post(ENDPOINTS.LEADS.NOTES(String(id)), { content })
   },
 
   async create(dto: CreateLeadDto): Promise<Lead> {
@@ -90,15 +90,15 @@ export const leadsService = {
     return lead
   },
 
-  async update(id: string, dto: UpdateLeadDto): Promise<Lead> {
+  async update(id: string | number, dto: UpdateLeadDto): Promise<Lead> {
     const { data } = await apiClient.put<ApiEnvelope<BackendLead>>(
-      ENDPOINTS.LEADS.BY_ID(id),
+      ENDPOINTS.LEADS.BY_ID(String(id)),
       toBackendUpdate(dto),
     )
     return mapLead(unwrap(data))
   },
 
-  async delete(id: string): Promise<void> {
-    await apiClient.delete(ENDPOINTS.LEADS.BY_ID(id))
+  async delete(id: string | number): Promise<void> {
+    await apiClient.delete(ENDPOINTS.LEADS.BY_ID(String(id)))
   },
 }

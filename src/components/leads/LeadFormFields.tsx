@@ -9,7 +9,7 @@ import type { LeadFormData } from '@/schemas/lead.schema'
 
 interface LeadFormFieldsProps {
   control: Control<LeadFormData>
-  leadSources: { id: string; name: string }[]
+  leadSources: { id: number; name: string }[]
   /** Preserves legacy free-text values (e.g. website inquiry messages) when editing. */
   propertyTypeValue?: string
 }
@@ -59,6 +59,7 @@ export function LeadFormFields({ control, leadSources, propertyTypeValue }: Lead
           control={control}
           label="Lead Source"
           options={leadSources.map((s) => ({ value: s.id, label: s.name }))}
+          numeric
           required
         />
       </Grid>

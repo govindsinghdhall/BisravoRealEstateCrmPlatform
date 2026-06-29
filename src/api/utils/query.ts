@@ -11,7 +11,7 @@ export async function invalidateListQueries(
 }
 
 /** Prepend a created record to all matching paginated list caches. */
-export function prependToListCaches<T extends { id: string }>(
+export function prependToListCaches<T extends { id: string | number }>(
   queryClient: QueryClient,
   queryKey: QueryKey,
   item: T,
@@ -31,7 +31,7 @@ export function prependToListCaches<T extends { id: string }>(
 }
 
 /** Replace a record in all matching paginated list caches. */
-export function updateInListCaches<T extends { id: string }>(
+export function updateInListCaches<T extends { id: string | number }>(
   queryClient: QueryClient,
   queryKey: QueryKey,
   item: T,
@@ -52,9 +52,9 @@ export function updateInListCaches<T extends { id: string }>(
 export function removeFromListCaches(
   queryClient: QueryClient,
   queryKey: QueryKey,
-  id: string,
+  id: string | number,
 ): void {
-  queryClient.setQueriesData<PaginatedResponse<{ id: string }>>(
+  queryClient.setQueriesData<PaginatedResponse<{ id: string | number }>>(
     { queryKey },
     (old) => {
       if (!old) return old

@@ -28,8 +28,8 @@ export function capitalize(str: string): string {
   return str.charAt(0).toUpperCase() + str.slice(1).replace(/_/g, ' ')
 }
 
-export function formatLeadId(id: string): string {
-  return `LD-${id.replace(/-/g, '').slice(0, 8).toUpperCase()}`
+export function formatLeadId(id: number): string {
+  return `LD-${String(id).padStart(6, '0')}`
 }
 
 export function formatContactRecordId(id: number): string {

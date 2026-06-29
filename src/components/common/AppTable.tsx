@@ -46,7 +46,7 @@ function useVisibleColumns<T>(columns: AppTableColumn<T>[]) {
 interface AppTableProps<T> {
   rows: T[]
   columns: AppTableColumn<T>[]
-  getRowId: (row: T) => string
+  getRowId: (row: T) => string | number
   loading?: boolean
   emptyMessage?: string
   showIndex?: boolean
@@ -163,7 +163,7 @@ export function AppTable<T>({
                     const rowIndex = page * rowsPerPage + index
                     return (
                       <TableRow
-                        key={getRowId(row)}
+                        key={String(getRowId(row))}
                         hover
                         className={onRowClick ? styles.clickableRow : undefined}
                         onClick={onRowClick ? () => onRowClick(row) : undefined}

@@ -1,4 +1,4 @@
-export const APP_NAME = 'RealEstate CRM'
+export const APP_NAME = 'Durga Property'
 
 export const STORAGE_KEYS = {
   TOKEN: 'recrm_token',

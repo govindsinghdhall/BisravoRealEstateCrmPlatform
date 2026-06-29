@@ -12,14 +12,14 @@ export interface Contact {
   state?: string
   pincode?: string
   source?: string
-  sourceId?: string
+  sourceId?: number
   leadsCount?: number
   createdAt: string
   updatedAt: string
 }
 
 export interface ContactLeadSummary {
-  id: string
+  id: number
   status: LeadStatus
   source?: string
   propertyTitle?: string
@@ -44,7 +44,7 @@ export interface CreateContactDto {
   city?: string
   state?: string
   pincode?: string
-  sourceId?: string
+  sourceId?: number
 }
 
 export type UpdateContactDto = Partial<CreateContactDto>

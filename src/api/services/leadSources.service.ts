@@ -6,6 +6,6 @@ import { unwrap } from '../utils/response'
 export const leadSourcesService = {
   async getAll(): Promise<BackendLeadSource[]> {
     const { data } = await apiClient.get<ApiEnvelope<BackendLeadSource[]>>(ENDPOINTS.LEAD_SOURCES.BASE)
-    return unwrap(data)
+    return unwrap(data).map((source) => ({ ...source, id: Number(source.id) }))
   },
 }

@@ -40,7 +40,7 @@ const defaultValues: LeadFormData = {
   email: '',
   phone: '',
   status: 'NEW',
-  sourceId: '',
+  sourceId: 0,
   budget: 0,
   propertyType: '',
   location: '',
@@ -54,7 +54,7 @@ export function LeadsPage() {
   const [search, setSearch] = useState('')
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [editingLead, setEditingLead] = useState<Lead | null>(null)
-  const [deleteId, setDeleteId] = useState<string | null>(null)
+  const [deleteId, setDeleteId] = useState<number | null>(null)
 
   const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ['leads', search],
@@ -85,7 +85,7 @@ export function LeadsPage() {
   })
 
   const updateMutation = useMutation({
-    mutationFn: ({ id, data }: { id: string; data: LeadFormData }) =>
+    mutationFn: ({ id, data }: { id: number; data: LeadFormData }) =>
       leadsService.update(id, data),
     onSuccess: async (lead) => {
       updateInListCaches(queryClient, ['leads'], lead)
@@ -117,7 +117,7 @@ export function LeadsPage() {
       email: lead.email,
       phone: lead.phone,
       status: lead.status,
-      sourceId: lead.sourceId ?? '',
+      sourceId: lead.sourceId ?? 0,
       budget: lead.budget,
       propertyType: lead.propertyType,
       location: lead.location,
@@ -266,7 +266,7 @@ export function LeadsPage() {
             Retry
           </Button>
         }>
-          Could not load leads: {getErrorMessage(error)}. Make sure the backend is running on port 3000 and you are logged in.
+          Could not load leads: {getErrorMessage(error)}. Make sure the backend is running (port 4000 locally) and you are logged in.
         </Alert>
       )}
 

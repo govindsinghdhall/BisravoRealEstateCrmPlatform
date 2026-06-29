@@ -41,30 +41,30 @@ export interface AuthPayload {
 }
 
 export interface BackendLeadSource {
-  id: string
+  id: number
   name: string
   type: string
 }
 
 export interface BackendLeadNote {
-  id: string
+  id: number
   content: string
   createdAt: string
   updatedAt: string
-  createdBy?: { id: string; firstName: string; lastName: string }
+  createdBy?: { id: number; firstName: string; lastName: string }
 }
 
 export interface BackendLeadTimeline {
-  id: string
+  id: number
   action: string
   description?: string | null
   metadata?: unknown
   createdAt: string
-  performedBy?: { id: string; firstName: string; lastName: string }
+  performedBy?: { id: number; firstName: string; lastName: string }
 }
 
 export interface BackendLead {
-  id: string
+  id: number
   contactId?: number
   firstName: string
   lastName: string
@@ -79,13 +79,13 @@ export interface BackendLead {
   city?: string | null
   state?: string | null
   pincode?: string | null
-  sourceId: string
-  assignedToId?: string | null
+  sourceId: number
+  assignedToId?: number | null
   source?: BackendLeadSource
-  assignedTo?: { id: string; firstName: string; lastName: string; email?: string }
-  createdBy?: { id: string; firstName: string; lastName: string; email?: string }
-  property?: { id: string; title: string; city?: string; type?: string }
-  project?: { id: string; name: string; city?: string }
+  assignedTo?: { id: number; firstName: string; lastName: string; email?: string }
+  createdBy?: { id: number; firstName: string; lastName: string; email?: string }
+  property?: { id: number; title: string; city?: string; type?: string }
+  project?: { id: number; name: string; city?: string }
   notes?: BackendLeadNote[]
   timeline?: BackendLeadTimeline[]
   _count?: { notes: number; siteVisits: number; bookings: number }
@@ -94,7 +94,7 @@ export interface BackendLead {
 }
 
 export interface BackendContactLead {
-  id: string
+  id: number
   status: string
   budget?: string | number | null
   requirements?: string | null

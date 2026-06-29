@@ -53,7 +53,7 @@ export function mapUser(user: BackendUser): UserRecord {
 
 function mapLeadNote(note: BackendLeadNote): LeadNote {
   return {
-    id: note.id,
+    id: toNumber(note.id),
     content: note.content,
     createdAt: note.createdAt,
     createdByName: note.createdBy
@@ -64,7 +64,7 @@ function mapLeadNote(note: BackendLeadNote): LeadNote {
 
 export function mapLeadTimeline(entry: BackendLeadTimeline): LeadTimelineEntry {
   return {
-    id: entry.id,
+    id: toNumber(entry.id),
     action: entry.action,
     description: entry.description ?? undefined,
     createdAt: entry.createdAt,
@@ -76,7 +76,7 @@ export function mapLeadTimeline(entry: BackendLeadTimeline): LeadTimelineEntry {
 
 export function mapLead(lead: BackendLead): Lead {
   return {
-    id: lead.id,
+    id: toNumber(lead.id),
     contactId: lead.contactId,
     firstName: lead.firstName,
     lastName: lead.lastName,
@@ -84,12 +84,12 @@ export function mapLead(lead: BackendLead): Lead {
     phone: lead.phone,
     status: lead.status as Lead['status'],
     source: lead.source?.name ?? '',
-    sourceId: lead.sourceId,
+    sourceId: toNumber(lead.sourceId),
     budget: toNumber(lead.budget),
     propertyType: lead.requirements ?? lead.property?.type ?? '',
     location: lead.city ?? lead.address ?? '',
     notes: lead.requirements ?? undefined,
-    assignedTo: lead.assignedToId ?? undefined,
+    assignedTo: lead.assignedToId != null ? toNumber(lead.assignedToId) : undefined,
     assignedToName: lead.assignedTo
       ? `${lead.assignedTo.firstName} ${lead.assignedTo.lastName}`
       : undefined,
@@ -119,7 +119,7 @@ export function mapLeadDetail(lead: BackendLead): LeadDetail {
 
 function mapContactLeadSummary(lead: BackendContactLead): ContactLeadSummary {
   return {
-    id: lead.id,
+    id: toNumber(lead.id),
     status: lead.status as ContactLeadSummary['status'],
     source: lead.source?.name,
     propertyTitle: lead.property?.title,
@@ -146,7 +146,7 @@ export function mapContact(contact: BackendContact): Contact {
     state: contact.state ?? undefined,
     pincode: contact.pincode ?? undefined,
     source: contact.source?.name,
-    sourceId: contact.sourceId ?? undefined,
+    sourceId: contact.sourceId != null ? toNumber(contact.sourceId) : undefined,
     leadsCount: contact._count?.leads,
     createdAt: contact.createdAt,
     updatedAt: contact.updatedAt,

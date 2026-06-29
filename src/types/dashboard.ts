@@ -10,7 +10,7 @@ export interface DashboardStats {
 }
 
 export interface RecentActivity {
-  id: string
+  id: number | string
   type: 'lead' | 'property' | 'site_visit' | 'booking'
   title: string
   description: string
