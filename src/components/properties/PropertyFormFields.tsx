@@ -12,6 +12,7 @@ import Grid from '@mui/material/Grid2'
 import { Controller, type Control, type UseFormSetValue, type UseFormWatch } from 'react-hook-form'
 import { FormCreatableSelect } from '@/components/forms/FormCreatableSelect'
 import { FormSelect } from '@/components/forms/FormSelect'
+import { TextField } from '@mui/material';
 import { FormSwitch } from '@/components/forms/FormSwitch'
 import { PropertyImageUpload } from '@/components/properties/PropertyImageUpload'
 import type { PropertyFormData } from '@/schemas/property.schema'
@@ -143,16 +144,25 @@ export function PropertyFormFields({
         <FormSelect name="status" control={control} label="Status" options={PROPERTY_STATUSES} required />
       </Grid>
       <Grid size={{ xs: 12, sm: 6 }}>
-        <FormSelect
-          name="price"
-          control={control}
-          label="Price"
-          options={PRICE_OPTIONS.map((p) => ({ value: p.value, label: p.label }))}
-          placeholder="Select price"
-          numeric
-          required
-        />
-      </Grid>
+  <Controller
+    name="price"
+    control={control}
+    render={({ field, fieldState }) => (
+      <TextField
+        {...field}
+        fullWidth
+        label="Price"
+        type="number"
+        required
+        value={field.value || ''}
+        onChange={(e) => field.onChange(Number(e.target.value))}
+        error={!!fieldState.error}
+        helperText={fieldState.error?.message}
+        inputProps={{ min: 0 }}
+      />
+    )}
+  />
+</Grid>
       <Grid size={{ xs: 12 }}>
         <FormSwitch name="isActive" control={control} label="Active (visible on website when Available)" />
       </Grid>

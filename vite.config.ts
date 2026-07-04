@@ -5,7 +5,7 @@ import path from 'path'
 export default defineConfig({
   plugins: [react()],
   server: {
-    open: false,
+    open: '/',
     port: 5173,
     proxy: {
       '/api': {

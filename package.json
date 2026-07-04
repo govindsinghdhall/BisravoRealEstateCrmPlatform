@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "BROWSER='Google Chrome' vite --open",
     "dev:api": "npm run dev --prefix RealEstateBackend",
     "dev:all": "concurrently -n api,web -c blue,green \"npm run dev:api\" \"npm run dev\"",
     "dev:chrome": "BROWSER='Google Chrome' vite --open",
