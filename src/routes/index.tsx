@@ -3,9 +3,13 @@ import { createBrowserRouter, Navigate } from 'react-router-dom'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { LoadingSpinner } from '@/components/common/LoadingSpinner'
 import { ProtectedRoute } from './ProtectedRoute'
+import { PropertiesLayout } from './PropertiesLayout'
 
 const LoginPage = lazy(() => import('@/pages/auth/LoginPage').then((m) => ({ default: m.LoginPage })))
 const SignupPage = lazy(() => import('@/pages/auth/SignupPage').then((m) => ({ default: m.SignupPage })))
+const PropertyOwnersPage = lazy(() =>
+  import('@/pages/properties/PropertyOwnersPage').then((m) => ({ default: m.PropertyOwnersPage })),
+)
 const DashboardPage = lazy(() => import('@/pages/dashboard/DashboardPage').then((m) => ({ default: m.DashboardPage })))
 const LeadsPage = lazy(() => import('@/pages/leads/LeadsPage').then((m) => ({ default: m.LeadsPage })))
 const LeadDetailPage = lazy(() => import('@/pages/leads/LeadDetailPage').then((m) => ({ default: m.LeadDetailPage })))
@@ -97,11 +101,25 @@ export const router = createBrowserRouter([
       },
       {
         path: 'properties',
-        element: (
-          <LazyPage>
-            <PropertiesPage />
-          </LazyPage>
-        ),
+        element: <PropertiesLayout />,
+        children: [
+          {
+            index: true,
+            element: (
+              <LazyPage>
+                <PropertiesPage />
+              </LazyPage>
+            ),
+          },
+          {
+            path: 'owners',
+            element: (
+              <LazyPage>
+                <PropertyOwnersPage />
+              </LazyPage>
+            ),
+          },
+        ],
       },
       {
         path: 'site-visits',

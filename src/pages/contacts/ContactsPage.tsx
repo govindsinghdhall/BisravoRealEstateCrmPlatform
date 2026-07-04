@@ -7,7 +7,7 @@ import PhoneOutlinedIcon from '@mui/icons-material/PhoneOutlined'
 import HistoryOutlinedIcon from '@mui/icons-material/HistoryOutlined'
 import { useQuery } from '@tanstack/react-query'
 import { AppTable, type AppTableColumn } from '@/components/common/AppTable'
-import tableStyles from '@/components/common/AppTable.module.css'
+import tableStyles from './ContactsTable.module.css'
 import { IdChip } from '@/components/common/IdChip'
 import { PageHeader } from '@/components/common/PageHeader'
 import { PageSummaryGrid, PageSummaryItem } from '@/components/common/PageSummaryGrid'
@@ -58,6 +58,7 @@ export function ContactsPage() {
       {
         id: 'contactId',
         label: 'Contact ID',
+        colClassName: tableStyles.colContactId,
         render: (contact) => (
           <IdChip
             label={formatContactRecordId(contact.id)}
@@ -70,6 +71,7 @@ export function ContactsPage() {
         id: 'name',
         label: 'Name',
         noTruncate: true,
+        colClassName: tableStyles.colName,
         headerClassName: tableStyles.cellName,
         cellClassName: `${tableStyles.cellStrong} ${tableStyles.cellName}`,
         render: (contact) => `${contact.firstName} ${contact.lastName}`,
@@ -78,6 +80,7 @@ export function ContactsPage() {
         id: 'phone',
         label: 'Phone',
         noTruncate: true,
+        colClassName: tableStyles.colPhone,
         headerClassName: tableStyles.cellPhone,
         cellClassName: tableStyles.cellPhone,
         render: (contact) => contact.phone,
@@ -85,6 +88,7 @@ export function ContactsPage() {
       {
         id: 'email',
         label: 'Email',
+        colClassName: tableStyles.colEmail,
         hideOnMobile: true,
         cellClassName: tableStyles.cellMuted,
         render: (contact) => contact.email || '—',
@@ -92,6 +96,7 @@ export function ContactsPage() {
       {
         id: 'city',
         label: 'City',
+        colClassName: tableStyles.colCity,
         hideOnTablet: true,
         hideOnMobile: true,
         render: (contact) => contact.city || '—',
@@ -99,6 +104,7 @@ export function ContactsPage() {
       {
         id: 'source',
         label: 'Source',
+        colClassName: tableStyles.colSource,
         hideOnTablet: true,
         hideOnMobile: true,
         render: (contact) => contact.source || '—',
@@ -107,11 +113,13 @@ export function ContactsPage() {
         id: 'leads',
         label: 'Leads',
         align: 'right',
+        colClassName: tableStyles.colLeads,
         render: (contact) => contact.leadsCount ?? 0,
       },
       {
         id: 'updated',
         label: 'Last Updated',
+        colClassName: tableStyles.colUpdated,
         hideOnTablet: true,
         hideOnMobile: true,
         cellClassName: tableStyles.cellMuted,
@@ -122,6 +130,7 @@ export function ContactsPage() {
         label: 'Actions',
         align: 'right',
         noTruncate: true,
+        colClassName: tableStyles.colActions,
         cellClassName: tableStyles.cellActions,
         render: (contact) => (
           <TableRowActions onView={() => openContact(contact)} />
@@ -193,6 +202,7 @@ export function ContactsPage() {
           rows={rows}
           columns={columns}
           getRowId={(row) => String(row.id)}
+          tableClassName={tableStyles.table}
           loading={isLoading}
           onRowClick={openContact}
           emptyMessage={search ? 'No contacts match your search' : 'No contacts yet — they are created automatically when leads are added'}

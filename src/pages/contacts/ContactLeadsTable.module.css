@@ -1,0 +1,19 @@
+/* Contact detail — linked leads table */
+
+.table {}
+
+.colLeadId { width: 12%; }
+.colStatus { width: 12%; }
+.colProperty { width: 22%; }
+.colSource { width: 14%; }
+.colAssigned { width: 16%; }
+.colBudget { width: 12%; }
+.colCreated { width: 12%; }
+
+.cellStrong {
+  font-weight: 600;
+}
+
+.cellMuted {
+  color: #64748b;
+}

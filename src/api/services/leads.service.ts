@@ -18,6 +18,7 @@ function toBackendCreate(dto: CreateLeadDto) {
     city: dto.location,
     requirements: dto.propertyType,
     assignedToId: dto.assignedTo || undefined,
+    propertyId: dto.propertyId ?? undefined,
   }
 }
 
@@ -33,6 +34,7 @@ function toBackendUpdate(dto: UpdateLeadDto) {
     city: dto.location,
     requirements: dto.propertyType,
     assignedToId: dto.assignedTo,
+    propertyId: dto.propertyId,
   }
 }
 

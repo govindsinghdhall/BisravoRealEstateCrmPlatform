@@ -1,0 +1,45 @@
+/* Leads table — edit column widths and cell styles here */
+
+.table {}
+
+.colLeadId { width: 9%; }
+.colName { width: 14%; }
+.colPhone { width: 12%; }
+.colSource { width: 11%; }
+.colBudget { width: 11%; }
+.colProperty { width: 14%; }
+.colLocation { width: 10%; }
+.colMessage { width: 14%; }
+.colStatus { width: 11%; }
+.colActions { width: 10%; }
+
+.cellName {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.cellPhone {
+  white-space: nowrap;
+}
+
+.cellStrong {
+  font-weight: 600;
+}
+
+.cellMuted {
+  color: #64748b;
+}
+
+.cellTruncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cellStatus {
+  white-space: nowrap;
+}
+
+.cellActions {
+  text-align: right;
+}

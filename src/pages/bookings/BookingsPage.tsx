@@ -9,7 +9,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { AppTable, type AppTableColumn } from '@/components/common/AppTable'
-import tableStyles from '@/components/common/AppTable.module.css'
+import tableStyles from './BookingsTable.module.css'
 import { ConfirmDialog } from '@/components/common/ConfirmDialog'
 import { PageHeader } from '@/components/common/PageHeader'
 import { PageSummaryGrid, PageSummaryItem } from '@/components/common/PageSummaryGrid'
@@ -151,12 +151,14 @@ export function BookingsPage() {
       {
         id: 'lead',
         label: 'Lead',
+        colClassName: tableStyles.colLead,
         cellClassName: tableStyles.cellStrong,
         render: (booking) => booking.leadName || '—',
       },
       {
         id: 'property',
         label: 'Property',
+        colClassName: tableStyles.colProperty,
         hideOnMobile: true,
         cellClassName: tableStyles.cellTruncate,
         render: (booking) => <span title={booking.propertyTitle}>{booking.propertyTitle || '—'}</span>,
@@ -164,6 +166,7 @@ export function BookingsPage() {
       {
         id: 'agent',
         label: 'Agent',
+        colClassName: tableStyles.colAgent,
         hideOnTablet: true,
         hideOnMobile: true,
         render: (booking) => booking.agentName || '—',
@@ -171,17 +174,20 @@ export function BookingsPage() {
       {
         id: 'amount',
         label: 'Amount',
+        colClassName: tableStyles.colAmount,
         cellClassName: tableStyles.cellStrong,
         render: (booking) => formatCurrency(booking.amount),
       },
       {
         id: 'status',
         label: 'Status',
+        colClassName: tableStyles.colStatus,
         render: (booking) => <StatusBadge status={booking.status} />,
       },
       {
         id: 'date',
         label: 'Date',
+        colClassName: tableStyles.colDate,
         hideOnTablet: true,
         hideOnMobile: true,
         render: (booking) => formatDate(booking.bookingDate ?? ''),
@@ -190,6 +196,7 @@ export function BookingsPage() {
         id: 'actions',
         label: 'Actions',
         align: 'right',
+        colClassName: tableStyles.colActions,
         cellClassName: tableStyles.cellActions,
         render: (booking) => (
           <TableRowActions
@@ -236,6 +243,7 @@ export function BookingsPage() {
         rows={rows}
         columns={columns}
         getRowId={(row) => row.id}
+        tableClassName={tableStyles.table}
         loading={isLoading}
         emptyMessage="No bookings found"
       />

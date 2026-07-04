@@ -12,6 +12,7 @@ import Grid from '@mui/material/Grid2'
 import { Controller, type Control, type UseFormSetValue, type UseFormWatch } from 'react-hook-form'
 import { FormCreatableSelect } from '@/components/forms/FormCreatableSelect'
 import { FormSelect } from '@/components/forms/FormSelect'
+import { FormTextField } from '@/components/forms/FormTextField'
 import { TextField } from '@mui/material';
 import { FormSwitch } from '@/components/forms/FormSwitch'
 import { PropertyImageUpload } from '@/components/properties/PropertyImageUpload'
@@ -35,7 +36,6 @@ import {
   GURGAON_CITIES,
   HARYANA_STATES,
   POSSESSION_QUARTERS,
-  PRICE_OPTIONS,
   ROI_OPTIONS,
   RERA_STATUS_OPTIONS,
   withLegacyOption,
@@ -374,6 +374,23 @@ export function PropertyFormFields({
             </FormGroup>
           )}
         />
+      </Grid>
+
+      <SectionTitle>Owner Information (CRM only)</SectionTitle>
+      <Grid size={{ xs: 12, sm: 6 }}>
+        <FormTextField control={control} name="ownerName" label="Owner Name" />
+      </Grid>
+      <Grid size={{ xs: 12, sm: 6 }}>
+        <FormTextField control={control} name="ownerPhone" label="Owner Phone" />
+      </Grid>
+      <Grid size={{ xs: 12, sm: 6 }}>
+        <FormTextField control={control} name="ownerEmail" label="Owner Email" />
+      </Grid>
+      <Grid size={{ xs: 12, sm: 6 }}>
+        <FormTextField control={control} name="ownerAddress" label="Owner Address" />
+      </Grid>
+      <Grid size={{ xs: 12 }}>
+        <FormTextField control={control} name="ownerNotes" label="Owner Notes" multiline rows={2} />
       </Grid>
 
       <SectionTitle>Photos</SectionTitle>

@@ -19,7 +19,7 @@ import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined'
 import HistoryOutlinedIcon from '@mui/icons-material/HistoryOutlined'
 import { useQuery } from '@tanstack/react-query'
 import { AppTable, type AppTableColumn } from '@/components/common/AppTable'
-import tableStyles from '@/components/common/AppTable.module.css'
+import tableStyles from './ContactLeadsTable.module.css'
 import { IdChip } from '@/components/common/IdChip'
 import { LoadingSpinner } from '@/components/common/LoadingSpinner'
 import { PageHeader } from '@/components/common/PageHeader'
@@ -70,6 +70,7 @@ export function ContactDetailPage() {
       {
         id: 'leadId',
         label: 'Lead ID',
+        colClassName: tableStyles.colLeadId,
         render: (lead) => (
           <IdChip
             label={formatLeadId(lead.id)}
@@ -81,17 +82,20 @@ export function ContactDetailPage() {
       {
         id: 'status',
         label: 'Status',
+        colClassName: tableStyles.colStatus,
         render: (lead) => <StatusBadge status={lead.status} />,
       },
       {
         id: 'property',
         label: 'Property Interest',
+        colClassName: tableStyles.colProperty,
         hideOnMobile: true,
         render: (lead) => lead.propertyTitle || lead.propertyType || '—',
       },
       {
         id: 'source',
         label: 'Source',
+        colClassName: tableStyles.colSource,
         hideOnTablet: true,
         hideOnMobile: true,
         render: (lead) => lead.source || '—',
@@ -99,6 +103,7 @@ export function ContactDetailPage() {
       {
         id: 'agent',
         label: 'Assigned Agent',
+        colClassName: tableStyles.colAssigned,
         hideOnTablet: true,
         hideOnMobile: true,
         render: (lead) => lead.assignedToName || 'Unassigned',
@@ -106,6 +111,7 @@ export function ContactDetailPage() {
       {
         id: 'budget',
         label: 'Budget',
+        colClassName: tableStyles.colBudget,
         hideOnMobile: true,
         cellClassName: tableStyles.cellStrong,
         render: (lead) => (lead.budget ? formatCurrency(lead.budget) : '—'),
@@ -113,6 +119,7 @@ export function ContactDetailPage() {
       {
         id: 'created',
         label: 'Inquiry Date',
+        colClassName: tableStyles.colCreated,
         hideOnTablet: true,
         hideOnMobile: true,
         cellClassName: tableStyles.cellMuted,
@@ -232,6 +239,7 @@ export function ContactDetailPage() {
               rows={contact.leads}
               columns={leadColumns}
               getRowId={(row) => row.id}
+              tableClassName={tableStyles.table}
               showIndex={false}
               emptyMessage="No leads linked to this contact yet."
               onRowClick={(lead) => navigate(`/leads/${lead.id}`)}

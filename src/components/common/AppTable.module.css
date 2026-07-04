@@ -1,3 +1,5 @@
+/* AppTable shell — shared structure only. Style columns in each page's *Table.module.css */
+
 .toolbar {
   display: flex;
   flex-wrap: wrap;
@@ -8,7 +10,7 @@
 
 .search {
   flex: 1;
-  min-width: 200px;
+  min-width: 220px;
 }
 
 .filters {
@@ -17,10 +19,11 @@
 
 .tableCard {
   margin-top: 16px;
-  border-radius: 12px;
-  border: 1px solid #e8edf3;
-  overflow: hidden;
   background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
 }
 
 .tableWrap {
@@ -31,33 +34,45 @@
 .table {
   width: 100%;
   table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 0;
 }
 
 .table :global(.MuiTableCell-head) {
+  position: sticky;
+  top: 0;
+  z-index: 2;
   background: #f8fafc;
   color: #64748b;
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
-  white-space: nowrap;
   padding: 14px 16px;
-  border-bottom: 1px solid #e8edf3;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  border-bottom: 1px solid #e5e7eb;
+  vertical-align: middle;
 }
 
 .table :global(.MuiTableCell-body) {
   font-size: 0.875rem;
   color: #0f172a;
   padding: 14px 16px;
-  border-bottom: 1px solid #f1f5f9;
+  border-bottom: 1px solid #eef2f7;
   vertical-align: middle;
+  line-height: 1.5;
+}
+
+.table :global(.MuiTableRow-root:nth-of-type(even)) {
+  background: #fafbfd;
+}
+
+.table :global(.MuiTableRow-root:hover) {
+  background: #f3f8ff;
 }
 
 .tableCard[data-density='tablet'] .table :global(.MuiTableCell-head),
 .tableCard[data-density='tablet'] .table :global(.MuiTableCell-body) {
-  padding: 12px 10px;
+  padding: 12px;
   font-size: 0.8125rem;
 }
 
@@ -67,115 +82,54 @@
   font-size: 0.75rem;
 }
 
-.table :global(.MuiTableRow-root:hover) {
-  background: #f8fafc;
-}
-
 .clickableRow {
   cursor: pointer;
 }
 
-.cellFit {
-  white-space: nowrap;
+.cellDefault {
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 0;
+  white-space: nowrap;
 }
 
 .cellNoTruncate {
   overflow: visible;
-  max-width: none;
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .cellIndex {
+  width: 48px;
   color: #64748b;
   font-weight: 600;
-  width: 40px;
-  max-width: 40px;
-  overflow: visible;
-}
-
-.cellPrimary {
-  color: #1565c0;
-  font-weight: 600;
-}
-
-.cellStrong {
-  font-weight: 600;
-}
-
-.cellMuted {
-  color: #64748b;
-}
-
-.cellTruncate {
-  /* ellipsis handled by cellFit */
-}
-
-.cellName {
-  min-width: 150px;
-  width: 18%;
-}
-
-.cellPhone {
-  min-width: 130px;
-  width: 14%;
-}
-
-.cellStatus {
-  min-width: 120px;
-  width: 12%;
-}
-
-.colIndex {
-  width: 40px;
-}
-
-.colActions {
-  width: 160px;
+  text-align: center;
 }
 
 .cellActions {
-  width: 160px;
-  min-width: 160px;
-  max-width: 160px;
   text-align: right;
-  overflow: visible;
-  position: sticky;
-  right: 0;
-  z-index: 1;
-  background: #fff;
-  box-shadow: -6px 0 10px -8px rgba(15, 23, 42, 0.28);
+  white-space: nowrap;
 }
 
-.table :global(.MuiTableHead-root) .cellActions {
-  z-index: 2;
-  background: #f8fafc;
-}
-
-.table :global(.MuiTableRow-root:hover) .cellActions {
-  background: #f8fafc;
-}
-
-.tableCard[data-density='mobile'] .colActions,
-.tableCard[data-density='mobile'] .cellActions {
-  width: 132px;
-  min-width: 132px;
-  max-width: 132px;
-}
-
-.actions {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  justify-content: flex-end;
-  flex-shrink: 0;
-  width: 100%;
+.colIndex {
+  width: 48px;
 }
 
 .empty {
-  padding: 48px 16px;
+  padding: 56px 16px;
   text-align: center;
   color: #64748b;
+}
+
+.pagination {
+  border-top: 1px solid #eef2f7;
+  background: #fafbfd;
+}
+
+.table :global(.MuiTableHead-root .MuiTableCell-head:first-child) {
+  border-top-left-radius: 14px;
+}
+
+.table :global(.MuiTableHead-root .MuiTableCell-head:last-child) {
+  border-top-right-radius: 14px;
 }

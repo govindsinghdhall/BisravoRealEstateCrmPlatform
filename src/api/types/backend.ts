@@ -63,6 +63,32 @@ export interface BackendLeadTimeline {
   performedBy?: { id: number; firstName: string; lastName: string }
 }
 
+export interface BackendLeadPropertyLink {
+  id: number
+  propertyId: number
+  isPrimary: boolean
+  interestLevel: string
+  matchScore?: number | null
+  notes?: string | null
+  property?: {
+    id: number
+    title: string
+    type: string
+    status: string
+    price: number
+    city?: string
+    locality?: string
+    bedrooms?: number | null
+  }
+  createdAt: string
+}
+
+export interface BackendPropertySuggestion {
+  property: BackendProperty
+  matchScore: number
+  matchReasons: string[]
+}
+
 export interface BackendLead {
   id: number
   contactId?: number
@@ -81,11 +107,13 @@ export interface BackendLead {
   pincode?: string | null
   sourceId: number
   assignedToId?: number | null
+  propertyId?: number | null
   source?: BackendLeadSource
   assignedTo?: { id: number; firstName: string; lastName: string; email?: string }
   createdBy?: { id: number; firstName: string; lastName: string; email?: string }
   property?: { id: number; title: string; city?: string; type?: string }
   project?: { id: number; name: string; city?: string }
+  linkedProperties?: BackendLeadPropertyLink[]
   notes?: BackendLeadNote[]
   timeline?: BackendLeadTimeline[]
   _count?: { notes: number; siteVisits: number; bookings: number }
@@ -162,6 +190,11 @@ export interface BackendProperty {
   brochureUrl?: string | null
   amenities?: string[]
   isActive?: boolean
+  ownerName?: string | null
+  ownerPhone?: string | null
+  ownerEmail?: string | null
+  ownerAddress?: string | null
+  ownerNotes?: string | null
   images?: { id: string; url: string; isPrimary?: boolean; caption?: string | null }[]
   createdAt: string
   updatedAt: string

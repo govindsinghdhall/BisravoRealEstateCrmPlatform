@@ -1,0 +1,47 @@
+/* Property owners table — edit column widths and cell styles here */
+
+.table {}
+
+.colProperty { width: 22%; }
+.colPrice { width: 10%; }
+.colStatus { width: 9%; }
+.colOwnerName { width: 12%; }
+.colOwnerPhone { width: 11%; }
+.colOwnerEmail { width: 14%; }
+.colOwnerAddress { width: 14%; }
+.colOwnerNotes { width: 8%; }
+
+.cellProperty {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.45;
+}
+
+.cellPrice {
+  white-space: nowrap;
+  font-weight: 600;
+}
+
+.cellStatus {
+  white-space: nowrap;
+}
+
+.cellName {
+  font-weight: 600;
+}
+
+.cellPhone {
+  white-space: nowrap;
+}
+
+.cellStrong {
+  font-weight: 600;
+}
+
+.cellMuted {
+  color: #64748b;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

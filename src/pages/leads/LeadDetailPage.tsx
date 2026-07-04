@@ -31,15 +31,21 @@ import { LoadingSpinner } from '@/components/common/LoadingSpinner'
 import { getErrorMessage } from '@/api/client'
 import { leadsService } from '@/api/services'
 import { invalidateListQueries } from '@/api/utils/query'
+import { LeadPropertyPanel } from '@/components/leads/LeadPropertyPanel'
 import { LEAD_STATUSES } from '@/utils/constants'
 import { capitalize, formatContactId, formatContactRecordId, formatCurrency, formatDateTime, formatLeadId } from '@/utils/formatters'
 import type { LeadStatus } from '@/types'
 
 const TIMELINE_ACTION_LABELS: Record<string, string> = {
   LEAD_CREATED: 'Lead created',
+  CREATED: 'Lead created',
   STATUS_CHANGED: 'Status updated',
   ASSIGNED: 'Lead assigned',
   NOTE_ADDED: 'Note added',
+  PROPERTY_LINKED: 'Property linked',
+  PROPERTY_UNLINKED: 'Property unlinked',
+  PROPERTY_LINK_UPDATED: 'Property interest updated',
+  PROPERTY_INTEREST_UPDATED: 'Primary property updated',
 }
 
 function InfoRow({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
@@ -227,7 +233,12 @@ export function LeadDetailPage() {
               </Grid>
               <Grid size={{ xs: 12, sm: 6 }}>
                 <Typography variant="caption" color="text.secondary">Property Interest</Typography>
-                <Typography variant="body2" fontWeight={600}>{lead.propertyTitle || lead.propertyType || '—'}</Typography>
+                <Typography variant="body2" fontWeight={600}>
+                  {lead.linkedProperties?.find((item) => item.isPrimary)?.property?.title
+                    || lead.propertyTitle
+                    || lead.propertyType
+                    || '—'}
+                </Typography>
               </Grid>
               <Grid size={{ xs: 12, sm: 6 }}>
                 <Typography variant="caption" color="text.secondary">Created By</Typography>
@@ -254,6 +265,10 @@ export function LeadDetailPage() {
               )}
             </Grid>
           </SectionCard>
+        </Grid>
+
+        <Grid size={{ xs: 12 }}>
+          <LeadPropertyPanel leadId={lead.id} primaryPropertyTitle={lead.propertyTitle} />
         </Grid>
 
         <Grid size={{ xs: 12, md: 5 }}>

@@ -1,0 +1,23 @@
+/* Users table — edit column widths and cell styles here */
+
+.table {}
+
+.colName { width: 18%; }
+.colEmail { width: 22%; }
+.colPhone { width: 14%; }
+.colRole { width: 12%; }
+.colStatus { width: 12%; }
+.colCreated { width: 14%; }
+.colActions { width: 8%; }
+
+.cellStrong {
+  font-weight: 600;
+}
+
+.cellMuted {
+  color: #64748b;
+}
+
+.cellActions {
+  text-align: right;
+}

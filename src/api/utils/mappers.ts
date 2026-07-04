@@ -8,6 +8,7 @@ import type {
   Lead,
   LeadDetail,
   LeadNote,
+  LeadPropertyLink,
   LeadSourceReport,
   LeadTimelineEntry,
   Property,
@@ -23,6 +24,7 @@ import type {
   BackendContactLead,
   BackendLead,
   BackendLeadNote,
+  BackendLeadPropertyLink,
   BackendLeadTimeline,
   BackendProperty,
   BackendSiteVisit,
@@ -74,6 +76,32 @@ export function mapLeadTimeline(entry: BackendLeadTimeline): LeadTimelineEntry {
   }
 }
 
+export function mapLeadPropertyLink(link: BackendLeadPropertyLink): LeadPropertyLink {
+  return {
+    id: toNumber(link.id),
+    leadId: 0,
+    propertyId: toNumber(link.propertyId),
+    isPrimary: link.isPrimary,
+    interestLevel: link.interestLevel as LeadPropertyLink['interestLevel'],
+    matchScore: link.matchScore,
+    notes: link.notes,
+    property: link.property
+      ? {
+          id: toNumber(link.property.id),
+          title: link.property.title,
+          type: link.property.type,
+          status: link.property.status,
+          price: toNumber(link.property.price),
+          city: link.property.city,
+          locality: link.property.locality,
+          bedrooms: link.property.bedrooms,
+        }
+      : undefined,
+    createdAt: link.createdAt,
+    updatedAt: link.createdAt,
+  }
+}
+
 export function mapLead(lead: BackendLead): Lead {
   return {
     id: toNumber(lead.id),
@@ -93,6 +121,8 @@ export function mapLead(lead: BackendLead): Lead {
     assignedToName: lead.assignedTo
       ? `${lead.assignedTo.firstName} ${lead.assignedTo.lastName}`
       : undefined,
+    propertyId: lead.propertyId ?? lead.property?.id ?? null,
+    propertyTitle: lead.property?.title,
     createdAt: lead.createdAt,
     updatedAt: lead.updatedAt,
   }
@@ -108,6 +138,7 @@ export function mapLeadDetail(lead: BackendLead): LeadDetail {
     pincode: lead.pincode ?? undefined,
     propertyTitle: lead.property?.title,
     projectName: lead.project?.name,
+    linkedProperties: (lead.linkedProperties ?? []).map(mapLeadPropertyLink),
     createdByName: lead.createdBy
       ? `${lead.createdBy.firstName} ${lead.createdBy.lastName}`
       : undefined,
@@ -206,6 +237,11 @@ export function mapProperty(property: BackendProperty): Property {
         caption: img.caption ?? null,
       })) ?? [],
     isActive: property.isActive ?? true,
+    ownerName: property.ownerName ?? undefined,
+    ownerPhone: property.ownerPhone ?? undefined,
+    ownerEmail: property.ownerEmail ?? undefined,
+    ownerAddress: property.ownerAddress ?? undefined,
+    ownerNotes: property.ownerNotes ?? undefined,
     createdAt: property.createdAt,
     updatedAt: property.updatedAt,
   }

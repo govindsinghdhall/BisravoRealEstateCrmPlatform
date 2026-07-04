@@ -1,0 +1,26 @@
+/* Properties table — edit column widths and cell styles here */
+
+.table {}
+
+.colProperty { width: 38%; }
+.colPrice { width: 16%; }
+.colStatus { width: 14%; }
+.colType { width: 16%; }
+.colActions { width: 16%; }
+
+.cellPrimary {
+  color: #1565c0;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cellStrong {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.cellActions {
+  text-align: right;
+}

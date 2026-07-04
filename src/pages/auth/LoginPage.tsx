@@ -25,7 +25,8 @@ export function LoginPage() {
 
   const { control, handleSubmit } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
-    defaultValues: { email: 'admin@realestatecrm.com', password: 'Admin@123' },
+    // defaultValues: { email: 'admin@realestatecrm.com', password: 'Admin@123' },
+    defaultValues: { email: '', password: '' },
   })
 
   const loginMutation = useMutation({
@@ -61,14 +62,14 @@ export function LoginPage() {
       )}
       <Box component="form" onSubmit={handleSubmit((data) => loginMutation.mutate(data))}>
         <Box display="flex" flexDirection="column" gap={2.5}>
-          <FormTextField name="email" control={control} label="Email" type="email" required />
+          <FormTextField name="email" control={control} label="Email" type="email"  />
           <FormTextField
             name="password"
             control={control}
             label="Password"
             type="password"
             showPasswordToggle
-            required
+            
           />
           <Button
             type="submit"
@@ -81,9 +82,9 @@ export function LoginPage() {
           </Button>
         </Box>
       </Box>
-      <Alert severity="info" sx={{ mt: 3 }}>
+      {/* <Alert severity="info" sx={{ mt: 3 }}>
         Demo credentials: admin@realestatecrm.com / Admin@123
-      </Alert>
+      </Alert> */}
       <AuthFooterLink text="Don't have an account?" linkText="Sign up" to="/signup" />
     </AuthLayout>
   )

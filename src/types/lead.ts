@@ -1,4 +1,5 @@
 import type { LEAD_STATUSES } from '@/utils/constants'
+import type { LeadPropertyLink } from './leadProperty'
 
 export type LeadStatus = (typeof LEAD_STATUSES)[number]
 
@@ -17,6 +18,8 @@ export interface Lead {
   location: string
   assignedTo?: number
   assignedToName?: string
+  propertyId?: number | null
+  propertyTitle?: string
   notes?: string
   createdAt: string
   updatedAt: string
@@ -33,6 +36,7 @@ export interface CreateLeadDto {
   budget: number
   propertyType: string
   location: string
+  propertyId?: number | null
   assignedTo?: number
   notes?: string
 }
@@ -62,6 +66,7 @@ export interface LeadDetail extends Lead {
   pincode?: string
   propertyTitle?: string
   projectName?: string
+  linkedProperties?: LeadPropertyLink[]
   createdByName?: string
   notesList: LeadNote[]
   timeline: LeadTimelineEntry[]

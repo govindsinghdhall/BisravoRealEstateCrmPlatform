@@ -1,0 +1,25 @@
+/* Site visits table — edit column widths and cell styles here */
+
+.table {}
+
+.colLead { width: 16%; }
+.colProperty { width: 22%; }
+.colAgent { width: 14%; }
+.colScheduled { width: 14%; }
+.colStatus { width: 12%; }
+.colNotes { width: 14%; }
+.colActions { width: 8%; }
+
+.cellStrong {
+  font-weight: 600;
+}
+
+.cellTruncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cellActions {
+  text-align: right;
+}

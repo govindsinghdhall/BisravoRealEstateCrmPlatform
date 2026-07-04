@@ -14,6 +14,7 @@ import {
 import ContactsOutlinedIcon from '@mui/icons-material/ContactsOutlined'
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined'
 import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline'
+import PersonSearchOutlinedIcon from '@mui/icons-material/PersonSearchOutlined'
 import HomeWorkOutlinedIcon from '@mui/icons-material/HomeWorkOutlined'
 import EventAvailableOutlinedIcon from '@mui/icons-material/EventAvailableOutlined'
 import BookOnlineOutlinedIcon from '@mui/icons-material/BookOnlineOutlined'
@@ -32,6 +33,7 @@ const NAV_ITEMS = [
   { label: 'Leads', path: '/leads', icon: PeopleOutlineIcon },
   { label: 'Contacts', path: '/contacts', icon: ContactsOutlinedIcon },
   { label: 'Properties', path: '/properties', icon: HomeWorkOutlinedIcon },
+  { label: 'Property Owners', path: '/properties/owners', icon: PersonSearchOutlinedIcon },
   { label: 'Site Visits', path: '/site-visits', icon: EventAvailableOutlinedIcon },
   { label: 'Bookings', path: '/bookings', icon: BookOnlineOutlinedIcon },
   { label: 'Users', path: '/users', icon: GroupOutlinedIcon },
@@ -76,7 +78,10 @@ export function Sidebar() {
 
       <List sx={{ flex: 1, px: 1 }}>
         {NAV_ITEMS.map((item) => {
-          const isActive = location.pathname.startsWith(item.path)
+          const isActive =
+            item.path === '/properties'
+              ? location.pathname === '/properties'
+              : location.pathname === item.path || location.pathname.startsWith(`${item.path}/`)
           const Icon = item.icon
 
           const button = (

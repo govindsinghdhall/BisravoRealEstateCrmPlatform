@@ -10,6 +10,10 @@ export const ENDPOINTS = {
     BY_ID: (id: string) => `/leads/${id}`,
     TIMELINE: (id: string) => `/leads/${id}/timeline`,
     NOTES: (id: string) => `/leads/${id}/notes`,
+    PROPERTY_SUGGESTIONS: (id: string) => `/leads/${id}/property-suggestions`,
+    LINKED_PROPERTIES: (id: string) => `/leads/${id}/linked-properties`,
+    LINKED_PROPERTY: (leadId: string, propertyId: string | number) =>
+      `/leads/${leadId}/linked-properties/${propertyId}`,
   },
   CONTACTS: {
     BASE: '/contacts',
@@ -20,6 +24,7 @@ export const ENDPOINTS = {
   PROPERTIES: {
     BASE: '/properties',
     INVENTORY: '/properties/inventory',
+    OWNERS: '/properties/owners',
     BY_ID: (id: string) => `/properties/${id}`,
     IMAGES: (id: string) => `/properties/${id}/images`,
     IMAGES_BATCH: (id: string) => `/properties/${id}/images/batch`,

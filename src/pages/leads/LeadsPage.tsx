@@ -10,7 +10,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { AppTable, type AppTableColumn } from '@/components/common/AppTable'
-import tableStyles from '@/components/common/AppTable.module.css'
+import tableStyles from './LeadsTable.module.css'
 import { ConfirmDialog } from '@/components/common/ConfirmDialog'
 import { IdChip } from '@/components/common/IdChip'
 import { PageHeader } from '@/components/common/PageHeader'
@@ -163,6 +163,7 @@ export function LeadsPage() {
       {
         id: 'leadId',
         label: 'Lead ID',
+        colClassName: tableStyles.colLeadId,
         render: (lead) => (
           <IdChip
             label={formatLeadId(lead.id)}
@@ -175,6 +176,7 @@ export function LeadsPage() {
         id: 'name',
         label: 'Name',
         noTruncate: true,
+        colClassName: tableStyles.colName,
         headerClassName: tableStyles.cellName,
         cellClassName: `${tableStyles.cellStrong} ${tableStyles.cellName}`,
         render: (lead) => `${lead.firstName} ${lead.lastName}`,
@@ -183,6 +185,7 @@ export function LeadsPage() {
         id: 'phone',
         label: 'Phone',
         noTruncate: true,
+        colClassName: tableStyles.colPhone,
         headerClassName: tableStyles.cellPhone,
         cellClassName: tableStyles.cellPhone,
         render: (lead) => lead.phone,
@@ -192,6 +195,7 @@ export function LeadsPage() {
         label: 'Source',
         hideOnTablet: true,
         hideOnMobile: true,
+        colClassName: tableStyles.colSource,
         cellClassName: tableStyles.cellMuted,
         render: (lead) => lead.source,
       },
@@ -199,14 +203,25 @@ export function LeadsPage() {
         id: 'budget',
         label: 'Budget',
         hideOnMobile: true,
+        colClassName: tableStyles.colBudget,
         cellClassName: tableStyles.cellStrong,
         render: (lead) => (lead.budget ? formatCurrency(lead.budget) : '—'),
+      },
+      {
+        id: 'property',
+        label: 'Property Interest',
+        hideOnTablet: true,
+        hideOnMobile: true,
+        colClassName: tableStyles.colProperty,
+        cellClassName: tableStyles.cellMuted,
+        render: (lead) => lead.propertyTitle || lead.propertyType || '—',
       },
       {
         id: 'location',
         label: 'City',
         hideOnTablet: true,
         hideOnMobile: true,
+        colClassName: tableStyles.colLocation,
         render: (lead) => lead.location || '—',
       },
       {
@@ -214,6 +229,7 @@ export function LeadsPage() {
         label: 'Message',
         hideOnTablet: true,
         hideOnMobile: true,
+        colClassName: tableStyles.colMessage,
         cellClassName: tableStyles.cellTruncate,
         render: (lead) => <span title={lead.notes}>{lead.notes || '—'}</span>,
       },
@@ -221,6 +237,7 @@ export function LeadsPage() {
         id: 'status',
         label: 'Status',
         noTruncate: true,
+        colClassName: tableStyles.colStatus,
         headerClassName: tableStyles.cellStatus,
         cellClassName: tableStyles.cellStatus,
         render: (lead) => <StatusBadge status={lead.status} />,
@@ -229,6 +246,7 @@ export function LeadsPage() {
         id: 'actions',
         label: 'Actions',
         align: 'right',
+        colClassName: tableStyles.colActions,
         cellClassName: tableStyles.cellActions,
         render: (lead) => (
           <TableRowActions
@@ -290,6 +308,7 @@ export function LeadsPage() {
           rows={rows}
           columns={columns}
           getRowId={(row) => row.id}
+          tableClassName={tableStyles.table}
           loading={isLoading}
           onRowClick={openLead}
           emptyMessage={search ? 'No leads match your search' : 'No leads yet — submit a form on the website or add one here'}

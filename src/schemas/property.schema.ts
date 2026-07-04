@@ -47,6 +47,11 @@ export const propertySchema = z.object({
   brochureUrl: z.string().optional(),
   amenities: z.array(z.string()),
   isActive: z.boolean(),
+  ownerName: z.string().optional(),
+  ownerPhone: z.string().optional(),
+  ownerEmail: z.string().email('Invalid email').optional().or(z.literal('')),
+  ownerAddress: z.string().optional(),
+  ownerNotes: z.string().optional(),
 })
 
 export type PropertyFormData = z.infer<typeof propertySchema>

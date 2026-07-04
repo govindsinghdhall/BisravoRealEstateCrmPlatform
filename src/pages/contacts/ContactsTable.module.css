@@ -1,0 +1,34 @@
+/* Contacts table — edit column widths and cell styles here */
+
+.table {}
+
+.colContactId { width: 10%; }
+.colName { width: 14%; }
+.colPhone { width: 12%; }
+.colEmail { width: 16%; }
+.colCity { width: 10%; }
+.colSource { width: 10%; }
+.colLeads { width: 7%; }
+.colUpdated { width: 13%; }
+.colActions { width: 8%; }
+
+.cellName {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.cellPhone {
+  white-space: nowrap;
+}
+
+.cellStrong {
+  font-weight: 600;
+}
+
+.cellMuted {
+  color: #64748b;
+}
+
+.cellActions {
+  text-align: right;
+}

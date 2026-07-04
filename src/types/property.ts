@@ -62,6 +62,11 @@ export interface Property {
   amenities: string[]
   images: PropertyImage[]
   isActive: boolean
+  ownerName?: string | null
+  ownerPhone?: string | null
+  ownerEmail?: string | null
+  ownerAddress?: string | null
+  ownerNotes?: string | null
   createdAt: string
   updatedAt: string
 }
@@ -103,6 +108,11 @@ export interface CreatePropertyDto {
   brochureUrl?: string
   amenities: string[]
   isActive?: boolean
+  ownerName?: string
+  ownerPhone?: string
+  ownerEmail?: string
+  ownerAddress?: string
+  ownerNotes?: string
 }
 
 export type UpdatePropertyDto = Partial<CreatePropertyDto>

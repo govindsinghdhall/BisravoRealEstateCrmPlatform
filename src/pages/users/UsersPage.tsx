@@ -12,7 +12,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { AppTable, type AppTableColumn } from '@/components/common/AppTable'
-import tableStyles from '@/components/common/AppTable.module.css'
+import tableStyles from './UsersTable.module.css'
 import { ConfirmDialog } from '@/components/common/ConfirmDialog'
 import { PageHeader } from '@/components/common/PageHeader'
 import { PageSummaryGrid, PageSummaryItem } from '@/components/common/PageSummaryGrid'
@@ -188,12 +188,14 @@ export function UsersPage() {
       {
         id: 'name',
         label: 'Name',
+        colClassName: tableStyles.colName,
         cellClassName: tableStyles.cellStrong,
         render: (user) => `${user.firstName} ${user.lastName}`,
       },
       {
         id: 'email',
         label: 'Email',
+        colClassName: tableStyles.colEmail,
         hideOnMobile: true,
         cellClassName: tableStyles.cellMuted,
         render: (user) => user.email,
@@ -201,6 +203,7 @@ export function UsersPage() {
       {
         id: 'phone',
         label: 'Phone',
+        colClassName: tableStyles.colPhone,
         hideOnTablet: true,
         hideOnMobile: true,
         render: (user) => user.phone || '—',
@@ -208,11 +211,13 @@ export function UsersPage() {
       {
         id: 'role',
         label: 'Role',
+        colClassName: tableStyles.colRole,
         render: (user) => <StatusBadge status={user.role} />,
       },
       {
         id: 'active',
         label: 'Active',
+        colClassName: tableStyles.colStatus,
         hideOnMobile: true,
         render: (user) =>
           user.isActive ? <StatusBadge status="available" /> : <StatusBadge status="cancelled" />,
@@ -222,6 +227,7 @@ export function UsersPage() {
         label: 'Actions',
         align: 'right',
         noTruncate: true,
+        colClassName: tableStyles.colActions,
         cellClassName: tableStyles.cellActions,
         render: (user) => (
           <Box
@@ -298,6 +304,7 @@ export function UsersPage() {
         rows={rows}
         columns={columns}
         getRowId={(row) => row.id}
+        tableClassName={tableStyles.table}
         loading={isLoading}
         emptyMessage="No users found"
         searchValue={search}

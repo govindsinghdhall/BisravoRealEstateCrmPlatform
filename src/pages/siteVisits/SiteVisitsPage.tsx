@@ -9,7 +9,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { AppTable, type AppTableColumn } from '@/components/common/AppTable'
-import tableStyles from '@/components/common/AppTable.module.css'
+import tableStyles from './SiteVisitsTable.module.css'
 import { ConfirmDialog } from '@/components/common/ConfirmDialog'
 import { PageHeader } from '@/components/common/PageHeader'
 import { PageSummaryGrid, PageSummaryItem } from '@/components/common/PageSummaryGrid'
@@ -164,12 +164,14 @@ export function SiteVisitsPage() {
       {
         id: 'lead',
         label: 'Lead',
+        colClassName: tableStyles.colLead,
         cellClassName: tableStyles.cellStrong,
         render: (visit) => visit.leadName || '—',
       },
       {
         id: 'property',
         label: 'Property',
+        colClassName: tableStyles.colProperty,
         hideOnMobile: true,
         cellClassName: tableStyles.cellTruncate,
         render: (visit) => <span title={visit.propertyTitle}>{visit.propertyTitle || '—'}</span>,
@@ -177,6 +179,7 @@ export function SiteVisitsPage() {
       {
         id: 'agent',
         label: 'Agent',
+        colClassName: tableStyles.colAgent,
         hideOnTablet: true,
         hideOnMobile: true,
         render: (visit) => visit.agentName || '—',
@@ -184,16 +187,19 @@ export function SiteVisitsPage() {
       {
         id: 'scheduled',
         label: 'Scheduled',
+        colClassName: tableStyles.colScheduled,
         render: (visit) => formatDateTime(visit.scheduledAt),
       },
       {
         id: 'status',
         label: 'Status',
+        colClassName: tableStyles.colStatus,
         render: (visit) => <StatusBadge status={visit.status} />,
       },
       {
         id: 'notes',
         label: 'Notes',
+        colClassName: tableStyles.colNotes,
         hideOnTablet: true,
         hideOnMobile: true,
         cellClassName: tableStyles.cellTruncate,
@@ -203,6 +209,7 @@ export function SiteVisitsPage() {
         id: 'actions',
         label: 'Actions',
         align: 'right',
+        colClassName: tableStyles.colActions,
         cellClassName: tableStyles.cellActions,
         render: (visit) => (
           <TableRowActions
@@ -249,6 +256,7 @@ export function SiteVisitsPage() {
         rows={rows}
         columns={columns}
         getRowId={(row) => row.id}
+        tableClassName={tableStyles.table}
         loading={isLoading}
         emptyMessage="No site visits found"
       />

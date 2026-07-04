@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { memo, useCallback, useEffect, useMemo, useState, type ReactNode } from 'react'
 import {
   Box,
   InputAdornment,
@@ -21,12 +21,17 @@ export interface AppTableColumn<T> {
   id: string
   label: string
   align?: 'left' | 'right' | 'center'
+  /** Applied to header and body cells — use your page's table CSS module */
   cellClassName?: string
   headerClassName?: string
+  /** Applied to the <col> element for column width control */
+  colClassName?: string
+  /** Inline width for the column, e.g. "12%" or "140px" */
+  width?: string
   noTruncate?: boolean
   hideOnTablet?: boolean
   hideOnMobile?: boolean
-  render: (row: T, index: number) => React.ReactNode
+  render: (row: T, index: number) => ReactNode
 }
 
 function useVisibleColumns<T>(columns: AppTableColumn<T>[]) {
@@ -43,6 +48,64 @@ function useVisibleColumns<T>(columns: AppTableColumn<T>[]) {
   )
 }
 
+function resolveCellClasses<T>(
+  col: AppTableColumn<T>,
+  variant: 'head' | 'body',
+): string {
+  const classes: Array<string | undefined> = [
+    col.noTruncate ? styles.cellNoTruncate : styles.cellDefault,
+    col.id === 'actions' ? styles.cellActions : undefined,
+    variant === 'head' ? col.headerClassName : col.cellClassName,
+  ]
+
+  return classes.filter(Boolean).join(' ')
+}
+
+interface AppTableRowProps<T> {
+  row: T
+  rowIndex: number
+  rowKey: string
+  visibleColumns: AppTableColumn<T>[]
+  showIndexColumn: boolean
+  clickable: boolean
+  onRowClick?: (row: T) => void
+}
+
+const AppTableRow = memo(function AppTableRow<T>({
+  row,
+  rowIndex,
+  rowKey,
+  visibleColumns,
+  showIndexColumn,
+  clickable,
+  onRowClick,
+}: AppTableRowProps<T>) {
+  const handleClick = useCallback(() => {
+    onRowClick?.(row)
+  }, [onRowClick, row])
+
+  return (
+    <TableRow
+      hover
+      className={clickable ? styles.clickableRow : undefined}
+      onClick={clickable ? handleClick : undefined}
+    >
+      {showIndexColumn && (
+        <TableCell className={styles.cellIndex}>{rowIndex + 1}</TableCell>
+      )}
+      {visibleColumns.map((col) => (
+        <TableCell
+          key={`${rowKey}-${col.id}`}
+          align={col.align ?? 'left'}
+          className={resolveCellClasses(col, 'body')}
+        >
+          {col.render(row, rowIndex)}
+        </TableCell>
+      ))}
+    </TableRow>
+  )
+}) as <T>(props: AppTableRowProps<T>) => ReactNode
+
 interface AppTableProps<T> {
   rows: T[]
   columns: AppTableColumn<T>[]
@@ -53,9 +116,11 @@ interface AppTableProps<T> {
   searchValue?: string
   onSearchChange?: (value: string) => void
   searchPlaceholder?: string
-  toolbarExtra?: React.ReactNode
-  filters?: React.ReactNode
+  toolbarExtra?: ReactNode
+  filters?: ReactNode
   onRowClick?: (row: T) => void
+  /** Optional class from your page's table CSS module — applied to the <table> element */
+  tableClassName?: string
 }
 
 export function AppTable<T>({
@@ -71,6 +136,7 @@ export function AppTable<T>({
   toolbarExtra,
   filters,
   onRowClick,
+  tableClassName,
 }: AppTableProps<T>) {
   const breakpoint = useTableBreakpoint()
   const visibleColumns = useVisibleColumns(columns)
@@ -86,8 +152,30 @@ export function AppTable<T>({
     [rows, page, rowsPerPage],
   )
 
-  const showToolbar = onSearchChange || toolbarExtra
+  const showToolbar = Boolean(onSearchChange || toolbarExtra)
   const showIndexColumn = showIndex && breakpoint !== 'mobile'
+  const clickable = Boolean(onRowClick)
+
+  const tableClass = [styles.table, tableClassName].filter(Boolean).join(' ')
+
+  const handlePageChange = useCallback((_event: unknown, newPage: number) => {
+    setPage(newPage)
+  }, [])
+
+  const handleRowsPerPageChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      setRowsPerPage(parseInt(event.target.value, 10))
+      setPage(0)
+    },
+    [],
+  )
+
+  const handleSearchChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      onSearchChange?.(event.target.value)
+    },
+    [onSearchChange],
+  )
 
   return (
     <>
@@ -98,7 +186,7 @@ export function AppTable<T>({
               size="small"
               placeholder={searchPlaceholder}
               value={searchValue ?? ''}
-              onChange={(e) => onSearchChange(e.target.value)}
+              onChange={handleSearchChange}
               className={styles.search}
               slotProps={{
                 input: {
@@ -117,11 +205,7 @@ export function AppTable<T>({
 
       {filters && <Box className={styles.filters}>{filters}</Box>}
 
-      <Paper
-        className={styles.tableCard}
-        elevation={0}
-        data-density={breakpoint}
-      >
+      <Paper className={styles.tableCard} elevation={0} data-density={breakpoint}>
         {loading ? (
           <LoadingSpinner />
         ) : rows.length === 0 ? (
@@ -129,29 +213,27 @@ export function AppTable<T>({
         ) : (
           <>
             <TableContainer className={styles.tableWrap}>
-              <Table className={styles.table} size="medium" stickyHeader>
+              <Table className={tableClass} size="medium" stickyHeader>
                 <colgroup>
                   {showIndexColumn && <col className={styles.colIndex} />}
                   {visibleColumns.map((col) => (
                     <col
                       key={col.id}
-                      className={col.id === 'actions' ? styles.colActions : undefined}
+                      className={col.colClassName}
+                      style={col.width ? { width: col.width } : undefined}
                     />
                   ))}
                 </colgroup>
                 <TableHead>
                   <TableRow>
-                    {showIndexColumn && <TableCell className={styles.cellIndex}>#</TableCell>}
+                    {showIndexColumn && (
+                      <TableCell className={styles.cellIndex}>#</TableCell>
+                    )}
                     {visibleColumns.map((col) => (
                       <TableCell
                         key={col.id}
                         align={col.align ?? 'left'}
-                        className={[
-                          col.id === 'actions' ? styles.cellActions : undefined,
-                          col.headerClassName,
-                        ]
-                          .filter(Boolean)
-                          .join(' ')}
+                        className={resolveCellClasses(col, 'head')}
                       >
                         {col.label}
                       </TableCell>
@@ -161,34 +243,19 @@ export function AppTable<T>({
                 <TableBody>
                   {paginatedRows.map((row, index) => {
                     const rowIndex = page * rowsPerPage + index
+                    const rowKey = String(getRowId(row))
+
                     return (
-                      <TableRow
-                        key={String(getRowId(row))}
-                        hover
-                        className={onRowClick ? styles.clickableRow : undefined}
-                        onClick={onRowClick ? () => onRowClick(row) : undefined}
-                      >
-                        {showIndexColumn && (
-                          <TableCell className={styles.cellIndex}>{rowIndex + 1}</TableCell>
-                        )}
-                        {visibleColumns.map((col) => (
-                          <TableCell
-                            key={col.id}
-                            align={col.align ?? 'left'}
-                            className={[
-                              col.noTruncate || col.id === 'actions'
-                                ? styles.cellNoTruncate
-                                : styles.cellFit,
-                              col.id === 'actions' ? styles.cellActions : undefined,
-                              col.cellClassName,
-                            ]
-                              .filter(Boolean)
-                              .join(' ')}
-                          >
-                            {col.render(row, rowIndex)}
-                          </TableCell>
-                        ))}
-                      </TableRow>
+                      <AppTableRow
+                        key={rowKey}
+                        row={row}
+                        rowIndex={rowIndex}
+                        rowKey={rowKey}
+                        visibleColumns={visibleColumns}
+                        showIndexColumn={showIndexColumn}
+                        clickable={clickable}
+                        onRowClick={onRowClick}
+                      />
                     )
                   })}
                 </TableBody>
@@ -198,13 +265,11 @@ export function AppTable<T>({
               component="div"
               count={rows.length}
               page={page}
-              onPageChange={(_, newPage) => setPage(newPage)}
+              onPageChange={handlePageChange}
               rowsPerPage={rowsPerPage}
-              onRowsPerPageChange={(e) => {
-                setRowsPerPage(parseInt(e.target.value, 10))
-                setPage(0)
-              }}
+              onRowsPerPageChange={handleRowsPerPageChange}
               rowsPerPageOptions={[10, 25, 50]}
+              className={styles.pagination}
             />
           </>
         )}

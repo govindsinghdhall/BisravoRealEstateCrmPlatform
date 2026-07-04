@@ -1,4 +1,4 @@
-import type { CreatePropertyDto, PaginatedResponse, Property, QueryParams, UpdatePropertyDto } from '@/types'
+import type { CreatePropertyDto, PaginatedResponse, Property, PropertyWithOwner, QueryParams, UpdatePropertyDto } from '@/types'
 import type { ApiEnvelope, BackendProperty } from '../types/backend'
 import { apiClient } from '../client'
 import { ENDPOINTS } from '../endpoints'
@@ -47,6 +47,11 @@ function toBackendPayload(dto: CreatePropertyDto | UpdatePropertyDto) {
     brochureUrl: dto.brochureUrl || undefined,
     amenities: dto.amenities,
     isActive: dto.isActive,
+    ownerName: dto.ownerName || null,
+    ownerPhone: dto.ownerPhone || null,
+    ownerEmail: dto.ownerEmail || null,
+    ownerAddress: dto.ownerAddress || null,
+    ownerNotes: dto.ownerNotes || null,
   }
 }
 
@@ -92,6 +97,16 @@ export const propertiesService = {
       ENDPOINTS.PROPERTIES.INVENTORY,
     )
     return unwrap(data)
+  },
+
+  async getOwners(params?: QueryParams): Promise<PaginatedResponse<PropertyWithOwner>> {
+    const apiParams = toApiParams(params)
+    const { data } = await apiClient.get<ApiEnvelope<BackendProperty[]>>(
+      ENDPOINTS.PROPERTIES.OWNERS,
+      { params: apiParams },
+    )
+    const result = unwrapPaginated(data)
+    return { ...result, data: result.data.map(mapProperty) as PropertyWithOwner[] }
   },
 
   async uploadImages(

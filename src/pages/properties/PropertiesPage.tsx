@@ -9,7 +9,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { AppTable, type AppTableColumn } from '@/components/common/AppTable'
-import tableStyles from '@/components/common/AppTable.module.css'
+import tableStyles from './PropertiesTable.module.css'
 import { ConfirmDialog } from '@/components/common/ConfirmDialog'
 import { PageHeader } from '@/components/common/PageHeader'
 import { PageSummaryGrid, PageSummaryItem } from '@/components/common/PageSummaryGrid'
@@ -68,6 +68,11 @@ const defaultValues: PropertyFormData = {
   brochureUrl: '',
   amenities: [],
   isActive: true,
+  ownerName: '',
+  ownerPhone: '',
+  ownerEmail: '',
+  ownerAddress: '',
+  ownerNotes: '',
 }
 
 function propertyLabel(property: Property) {
@@ -255,6 +260,11 @@ export function PropertiesPage() {
         brochureUrl: fresh.brochureUrl ?? '',
         amenities: fresh.amenities,
         isActive: fresh.isActive,
+        ownerName: fresh.ownerName ?? '',
+        ownerPhone: fresh.ownerPhone ?? '',
+        ownerEmail: fresh.ownerEmail ?? '',
+        ownerAddress: fresh.ownerAddress ?? '',
+        ownerNotes: fresh.ownerNotes ?? '',
       })
       setDrawerOpen(true)
     } catch (err) {
@@ -315,6 +325,7 @@ export function PropertiesPage() {
       {
         id: 'property',
         label: 'Property',
+        colClassName: tableStyles.colProperty,
         cellClassName: tableStyles.cellPrimary,
         render: (property) => (
           <span title={propertyLabel(property)}>{propertyLabel(property)}</span>
@@ -323,24 +334,28 @@ export function PropertiesPage() {
       {
         id: 'price',
         label: 'Price',
+        colClassName: tableStyles.colPrice,
         cellClassName: tableStyles.cellStrong,
         render: (property) => formatCurrency(property.price),
       },
       {
         id: 'status',
         label: 'Status',
+        colClassName: tableStyles.colStatus,
         render: (property) => <TablePill label={property.status} />,
       },
       {
         id: 'type',
         label: 'Type',
         hideOnMobile: true,
+        colClassName: tableStyles.colType,
         render: (property) => <TablePill label={property.listingCategory} />,
       },
       {
         id: 'actions',
         label: 'Actions',
         align: 'right',
+        colClassName: tableStyles.colActions,
         cellClassName: tableStyles.cellActions,
         render: (property) => (
           <TableRowActions
@@ -385,6 +400,7 @@ export function PropertiesPage() {
         rows={filteredRows}
         columns={columns}
         getRowId={(row) => row.id}
+        tableClassName={tableStyles.table}
         loading={isLoading}
         emptyMessage="No properties found"
         searchValue={search}
