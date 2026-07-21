@@ -21,6 +21,7 @@ export interface LoginCredentials {
 }
 
 export interface RegisterCredentials {
+  organizationName: string
   firstName: string
   lastName: string
   email: string

@@ -1,0 +1,14 @@
+RealEstate CRM Platform Summary
+
+This product is a multi-tenant real estate CRM built with a modern React + TypeScript frontend and a Node.js + Express + MongoDB backend. It helps real estate teams manage contacts, leads, properties, bookings, site visits, organizations, users, roles, and reporting in a unified dashboard.
+
+Key product capabilities:
+- Contact and lead management with manual contact creation and organization-level data.
+- Property and booking workflows, including site visit scheduling and lead/property associations.
+- Role-based permissions and authentication with JWT for secure user access.
+- Marketing support with a dedicated Marketing page and WhatsApp Business API integration for sending messages using stored templates or custom text.
+- Company and organization settings separated from marketing configuration for better modularity.
+- Backend WhatsApp template storage, CRUD endpoints, and a send endpoint that uses Graph API credentials from environment configuration.
+- Responsive UI components, data tables, side drawer navigation, and page-level layouts for a smooth user experience.
+
+The product focuses on combining operational CRM features with marketing automation tools, enabling real estate businesses to manage customer relationships and message outreach from a single platform.

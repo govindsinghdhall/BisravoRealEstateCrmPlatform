@@ -1,10 +1,16 @@
 import { useCallback, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Alert, Box, Button, Snackbar } from '@mui/material'
+import {
+  Alert,
+  Box,
+  Button,
+  Snackbar,
+} from '@mui/material'
 import ContactsOutlinedIcon from '@mui/icons-material/ContactsOutlined'
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline'
 import PhoneOutlinedIcon from '@mui/icons-material/PhoneOutlined'
 import HistoryOutlinedIcon from '@mui/icons-material/HistoryOutlined'
+import WhatsAppIcon from '@mui/icons-material/WhatsApp'
 import { useQuery } from '@tanstack/react-query'
 import { AppTable, type AppTableColumn } from '@/components/common/AppTable'
 import tableStyles from './ContactsTable.module.css'
@@ -14,7 +20,9 @@ import { PageSummaryGrid, PageSummaryItem } from '@/components/common/PageSummar
 import { StatCard } from '@/components/common/StatCard'
 import { TableRowActions } from '@/components/common/TableRowActions'
 import { AddContactsButton } from '@/components/contacts/AddContactsButton'
+import { CreateContactDrawer } from '@/components/contacts/CreateContactDrawer'
 import { ImportContactsDrawer } from '@/components/contacts/ImportContactsDrawer'
+import { WhatsAppSendDrawer } from '@/components/whatsapp/WhatsAppSendDrawer'
 import { getErrorMessage } from '@/api/client'
 import { contactsService } from '@/api/services'
 import { useAuthStore } from '@/store/authStore'
@@ -26,6 +34,8 @@ export function ContactsPage() {
   const accessToken = useAuthStore((state) => state.accessToken)
   const [search, setSearch] = useState('')
   const [importDrawerOpen, setImportDrawerOpen] = useState(false)
+  const [createDrawerOpen, setCreateDrawerOpen] = useState(false)
+  const [whatsappDrawerOpen, setWhatsAppDrawerOpen] = useState(false)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
 
   const { data, isLoading, isError, error, refetch } = useQuery({
@@ -209,13 +219,38 @@ export function ContactsPage() {
           searchValue={search}
           onSearchChange={setSearch}
           searchPlaceholder="Search contacts by name, email, phone, city..."
-          toolbarExtra={<AddContactsButton onImport={() => setImportDrawerOpen(true)} />}
+          toolbarExtra={
+            <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', alignItems: 'center' }}>
+              <Button
+                variant="outlined"
+                startIcon={<WhatsAppIcon />}
+                onClick={() => setWhatsAppDrawerOpen(true)}
+                disabled={rows.length === 0}
+              >
+                Send WhatsApp
+              </Button>
+              <AddContactsButton onImport={() => setImportDrawerOpen(true)} />
+            </Box>
+          }
         />
       )}
 
       <ImportContactsDrawer
         open={importDrawerOpen}
         onClose={() => setImportDrawerOpen(false)}
+        onSuccess={setSuccessMessage}
+      />
+
+      <CreateContactDrawer
+        open={createDrawerOpen}
+        onClose={() => setCreateDrawerOpen(false)}
+        onSuccess={setSuccessMessage}
+      />
+
+      <WhatsAppSendDrawer
+        open={whatsappDrawerOpen}
+        onClose={() => setWhatsAppDrawerOpen(false)}
+        contacts={rows}
         onSuccess={setSuccessMessage}
       />
 

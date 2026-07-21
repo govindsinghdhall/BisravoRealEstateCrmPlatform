@@ -1,6 +1,9 @@
+import type { WhatsAppSettings } from './whatsapp'
+
 export interface OrganizationSettings {
   faviconUrl?: string
   tagline?: string
+  whatsapp?: WhatsAppSettings | null
 }
 
 export interface Organization {

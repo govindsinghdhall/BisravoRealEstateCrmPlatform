@@ -3,6 +3,7 @@ export type { User, LoginCredentials, RegisterCredentials, AuthResponse, Profile
 export type * from './contact'
 export type * from './lead'
 export type * from './property'
+export type * from './whatsapp'
 export type * from './leadProperty'
 export type * from './siteVisit'
 export type * from './booking'

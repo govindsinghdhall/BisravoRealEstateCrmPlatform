@@ -21,6 +21,7 @@ import BookOnlineOutlinedIcon from '@mui/icons-material/BookOnlineOutlined'
 import GroupOutlinedIcon from '@mui/icons-material/GroupOutlined'
 import AssessmentOutlinedIcon from '@mui/icons-material/AssessmentOutlined'
 import BusinessOutlinedIcon from '@mui/icons-material/BusinessOutlined'
+import CampaignOutlinedIcon from '@mui/icons-material/CampaignOutlined'
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
 import { NavLink, useLocation } from 'react-router-dom'
 import { OrgBrand } from '@/components/common/OrgBrand'
@@ -36,6 +37,7 @@ const NAV_ITEMS = [
   { label: 'Property Owners', path: '/properties/owners', icon: PersonSearchOutlinedIcon },
   { label: 'Site Visits', path: '/site-visits', icon: EventAvailableOutlinedIcon },
   { label: 'Bookings', path: '/bookings', icon: BookOnlineOutlinedIcon },
+  { label: 'Marketing', path: '/bookings/marketing', icon: CampaignOutlinedIcon },
   { label: 'Users', path: '/users', icon: GroupOutlinedIcon },
   { label: 'Reports', path: '/reports', icon: AssessmentOutlinedIcon },
 ]
@@ -81,7 +83,14 @@ export function Sidebar() {
           const isActive =
             item.path === '/properties'
               ? location.pathname === '/properties'
-              : location.pathname === item.path || location.pathname.startsWith(`${item.path}/`)
+              : location.pathname === item.path ||
+                (location.pathname.startsWith(`${item.path}/`) &&
+                  !NAV_ITEMS.some(
+                    (other) =>
+                      other.path !== item.path &&
+                      other.path.startsWith(`${item.path}/`) &&
+                      location.pathname.startsWith(other.path),
+                  ))
           const Icon = item.icon
 
           const button = (

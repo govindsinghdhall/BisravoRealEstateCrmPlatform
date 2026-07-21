@@ -20,6 +20,7 @@ const ContactDetailPage = lazy(() =>
 const PropertiesPage = lazy(() => import('@/pages/properties/PropertiesPage').then((m) => ({ default: m.PropertiesPage })))
 const SiteVisitsPage = lazy(() => import('@/pages/siteVisits/SiteVisitsPage').then((m) => ({ default: m.SiteVisitsPage })))
 const BookingsPage = lazy(() => import('@/pages/bookings/BookingsPage').then((m) => ({ default: m.BookingsPage })))
+const MarketingPage = lazy(() => import('@/pages/bookings/MarketingPage').then((m) => ({ default: m.MarketingPage })))
 const UsersPage = lazy(() => import('@/pages/users/UsersPage').then((m) => ({ default: m.UsersPage })))
 const ReportsPage = lazy(() => import('@/pages/reports/ReportsPage').then((m) => ({ default: m.ReportsPage })))
 const CompanySettingsPage = lazy(() =>
@@ -134,6 +135,14 @@ export const router = createBrowserRouter([
         element: (
           <LazyPage>
             <BookingsPage />
+          </LazyPage>
+        ),
+      },
+      {
+        path: 'bookings/marketing',
+        element: (
+          <LazyPage>
+            <MarketingPage />
           </LazyPage>
         ),
       },

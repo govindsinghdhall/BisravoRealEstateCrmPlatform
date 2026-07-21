@@ -21,6 +21,12 @@ export const ENDPOINTS = {
     IMPORT_PREVIEW: '/contacts/import/preview',
     IMPORT: '/contacts/import',
   },
+  WHATSAPP: {
+    SETTINGS: '/whatsapp/settings',
+    TEMPLATES: '/whatsapp/templates',
+    TEMPLATE_BY_ID: (id: number | string) => `/whatsapp/templates/${id}`,
+    SEND: '/whatsapp/send',
+  },
   PROPERTIES: {
     BASE: '/properties',
     INVENTORY: '/properties/inventory',

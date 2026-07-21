@@ -14,6 +14,7 @@ import { useAuthStore } from '@/store/authStore'
 import { getErrorMessage } from '@/api/client'
 
 const defaultValues: SignupFormData = {
+  organizationName: '',
   firstName: '',
   lastName: '',
   email: '',
@@ -61,6 +62,9 @@ export function SignupPage() {
       )}
       <Box component="form" onSubmit={handleSubmit((data) => signupMutation.mutate(data))}>
         <Grid container spacing={2}>
+          <Grid size={{ xs: 12 }}>
+            <FormTextField name="organizationName" control={control} label="Organization Name" required />
+          </Grid>
           <Grid size={{ xs: 12, sm: 6 }}>
             <FormTextField name="firstName" control={control} label="First Name" required />
           </Grid>
@@ -74,10 +78,24 @@ export function SignupPage() {
             <FormTextField name="phone" control={control} label="Phone (optional)" />
           </Grid>
           <Grid size={{ xs: 12, sm: 6 }}>
-            <FormTextField name="password" control={control} label="Password" type="password" required />
+            <FormTextField
+              name="password"
+              control={control}
+              label="Password"
+              type="password"
+              showPasswordToggle
+              required
+            />
           </Grid>
           <Grid size={{ xs: 12, sm: 6 }}>
-            <FormTextField name="confirmPassword" control={control} label="Confirm Password" type="password" required />
+            <FormTextField
+              name="confirmPassword"
+              control={control}
+              label="Confirm Password"
+              type="password"
+              showPasswordToggle
+              required
+            />
           </Grid>
           <Grid size={{ xs: 12 }}>
             <Button

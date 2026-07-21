@@ -5,7 +5,6 @@ import {
   ListItemText,
   Menu,
   MenuItem,
-  Typography,
 } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
@@ -14,9 +13,10 @@ import UploadFileOutlinedIcon from '@mui/icons-material/UploadFileOutlined'
 
 interface AddContactsButtonProps {
   onImport: () => void
+  onCreate?: () => void
 }
 
-export function AddContactsButton({ onImport }: AddContactsButtonProps) {
+export function AddContactsButton({ onImport, onCreate }: AddContactsButtonProps) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const menuOpen = Boolean(anchorEl)
 
@@ -38,18 +38,17 @@ export function AddContactsButton({ onImport }: AddContactsButtonProps) {
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
-        <MenuItem disabled>
+          <MenuItem
+          onClick={() => {
+            setAnchorEl(null)
+            onCreate?.()
+          }}
+          disabled={!onCreate}
+        >
           <ListItemIcon>
             <PersonAddOutlinedIcon fontSize="small" />
           </ListItemIcon>
-          <ListItemText
-            primary="Add Contact Manually"
-            secondary={
-              <Typography variant="caption" color="text.secondary">
-                Coming Soon
-              </Typography>
-            }
-          />
+          <ListItemText primary="Add Contact Manually" />
         </MenuItem>
         <MenuItem
           onClick={() => {
